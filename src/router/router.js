@@ -1,16 +1,31 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import login from '../components/login.vue'
+import login from '../components/login.vue' //导入路由
+import home from '../components/home.vue' 
 
 Vue.use(VueRouter)
 
 const routes = [
   { path: '/', redirect: '/login' },
-  { path: '/login', component: login }
+  { path: '/login', component: login },
+  { path: '/home', component: home }
 ]
-
+// 原有定义路由代码，勿动
 const router = new VueRouter({
   routes
+})
+
+// 挂载路由导航守卫
+router.beforeEach((to, from, next) => {
+  // to 将要访问的路径
+  // from 代表从哪个路径跳转而来
+  // next 是一个函数，表示放行
+  //     next()  放行    next('/login')  强制跳转的路径
+  if (to.path === '/login') return next()
+  // 其他页面则要有token才能放行 之后的网络请求中要拿这个token放入请求头中
+  const tokenStr = window.sessionStorage.getItem('token')  //获取token，如果实际使用需要比对等等安全措施
+  if (!tokenStr){return next('/login')}  /* 可以不使用else */
+  next()
 })
 
 export default router
