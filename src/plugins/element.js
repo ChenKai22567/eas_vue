@@ -24,7 +24,10 @@ import {
   Table,
   TableColumn,
   Tooltip,
-  Pagination
+  Pagination,
+  Dialog,
+  Divider,
+  MessageBox
 } from 'element-ui'
 
 Vue.use(Button)
@@ -51,4 +54,7 @@ Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Tooltip)
 Vue.use(Pagination)
-Vue.prototype.$message = Message //弹框提示组件，与其它不同需要全局挂载
+Vue.use(Dialog)
+Vue.use(Divider)
+Vue.prototype.$message = Message   //弹框提示组件，与其它不同需要全局挂载
+Vue.prototype.$confirm = MessageBox.confirm   //messagebox的确认弹框

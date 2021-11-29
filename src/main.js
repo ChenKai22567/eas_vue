@@ -6,7 +6,7 @@ import './plugins/element.js' //导入的element插件
 import './assets/css/global.css'
 
 import axios from 'axios'
-axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
+axios.defaults.baseURL = 'http://101.43.37.78:8888/api/private/v1/'
 axios.interceptors.request.use(config =>{
   console.log(config)
   config.headers.Authorization = window.sessionStorage.getItem('token')

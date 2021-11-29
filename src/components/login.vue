@@ -5,6 +5,9 @@
       <div class="avatar_box">
         <img src="../assets/1.jpg" alt="头像" />
       </div>
+      <div>
+         <p id="hi_text">LOGIN</p>  <!--CSS对其格式调整就得用p-->
+        </div>
       <!--登陆表单区域-->
       <!--:hide-required-asterisk="true"来隐藏elementui默认的必选星号-->
       <el-form
@@ -15,7 +18,8 @@
         :hide-required-asterisk="true"
       >
         <!--先用：model绑定数据对象到form上-->
-        <el-form-item prop="username" label="账 号:" label-width="60px">
+        
+      <el-form-item prop="username" label="账 号：" label-width="60px">
           <!-- rules在表单中存放规则（直接在data新建一个对象即可），item中用prop调用rules存放的对应规则 -->
           <el-input
             v-model="loginForm.username"
@@ -23,7 +27,7 @@
           ></el-input>
           <!--再用v-model绑定到数据对象具体属性中-->
         </el-form-item>
-        <el-form-item prop="password" label="密 码:" label-width="60px">
+        <el-form-item prop="password" label="密 码：" label-width="60px">
           <el-input
             v-model="loginForm.password"
             prefix-icon="el-icon-lock"
@@ -35,6 +39,7 @@
           <el-button type="primary" plain @click="login">登录</el-button>
           <el-button type="info" plain @click="resetLoginForm">重置</el-button>
         </el-form-item>
+        <p id="bt_text">欢迎您登录紧急救助信息后台管理系统！</p>
       </el-form>
     </div>
   </div>
@@ -100,32 +105,33 @@ export default {
 
 <style lang="less" scoped>
 .login_container {
-  //background:url('../assets/2.png') no-repeat center;
+  background:url('../assets/蓝色.png') no-repeat center;
   height: 100%;
   background-size: 100% 100%;
   background-position: center 0;
+  text-align: center;
 }
 .login_box {
-  width: 450px;
-  height: 300px;
-  background-color: #eee;
-  border-radius: 7px;
+  width: 370px;
+  height: 340px;
+  background-color: #fff;
+  border-radius: 10px;
   position: absolute; //使其可以进行在页面上的位移
-  left: 65%;
+  left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 2px 2px 2px 5px #ddd;
+  transform: translate(-50%, -46%);
+   box-shadow: -10px 10px 10px rgba(0,0,0,.1);
 }
 .avatar_box {
-  height: 130px;
-  width: 130px;
+  height: 100px;
+  width: 100px;
   border: 1px solid #eee; //边框
   border-radius: 50%; //圆角
   padding: 7px;
   box-shadow: 0 0 10px #ddd; //边框线向外扩散十像素2
   position: absolute;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -60%);
   background-color: #fff;
   img {
     width: 100%;
@@ -136,17 +142,40 @@ export default {
 }
 .login_form {
   position: absolute;
-  bottom: 0;
+  bottom: 1%;
   width: 100%;
-  padding: 0px 20px 0px 0px;
+  padding: 0px 30px 12px 20px;  //上右下左
   box-sizing: border-box; //这样组件就不会超出form框
 }
 .btns {
   display: flex;
   justify-content: center;
   transform: translate(3%);
+  padding: 5px 0px 0px 0px;  //上右下左
+  font-weight: bold;
+  
 }
-
+.el-form{
+   font-weight: bold;
+}
+#hi_text{
+  padding: 28px 0px 25px 0px;  //上右下左
+  //text-align: center;  在container中
+  font-size: 30px;
+  font-weight: bold;
+  color: #939393;
+}
+#bt_text{
+  margin:0px 0px 0px 0px;  //上右下左
+  padding: 0px 0px 0px 0px;  //上右下左
+  font-size: 10px;
+  font-weight: bold;
+  color: #939393;
+  transform: translate(4%, 0%);
+}
+.el-button{
+  font-weight: bold;
+}
 /*样式区——css与js注释同，此为多行注释
   scope控制样式只影响当前组件，否则全局生效
 */

@@ -2,15 +2,14 @@
   <!-- 头部区域 -->
   <el-container class="home-container"
     ><!--检查element发现session没有占满屏幕，设置类可调格式-->
-    <el-header height="70px"
+    <el-header height="55px"
       ><!-- 这个element标签就是类名 可以直接拿这个设置样式 -->
       <div>
         <img src="../assets/logo.png" alt="最右侧图标" />
         <span>救助信息后台管理系统</span>
       </div>
       <el-button type="info" @click="logout" icon="el-icon-switch-button">
-        退出</el-button
-      >
+        退出</el-button>
     </el-header>
     <el-container>
       <!-- 页面主体区域(侧边栏) -->
@@ -18,15 +17,16 @@
         <div class="toggle-button" @click="toggleCollapse">
           <el-switch
             v-model="isCollapse"
-            active-color="#bbb"
-            inactive-color="#ccc"
+            active-color="#828b94"
+            inactive-color="#828b94"
           > <!-- active-text=""inactive-text=""-->
           </el-switch>
           
         </div>
         <el-menu
-          background-color="#bbb"
-          text-color="#000"
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#ffd04b"
           :unique-opened="true"
           :collapse="isCollapse"
           :collapse-transition="false"
@@ -69,7 +69,9 @@
         <!-- 路由占位符 welcome users等子组件,哪里有路由放在哪里 -->
         <router-view></router-view>
         </el-main>
-        <el-footer height="40px">Footer</el-footer>
+        <el-footer height="40px">
+           <el-divider content-position="center"><i class="el-icon-s-help">救助信息后台管理系统</i></el-divider>
+        </el-footer>
       </el-container>
     </el-container>
   </el-container>
@@ -129,7 +131,7 @@ export default {
   height: 100%;
 }
 .el-header {
-  background-color: #696969;
+  background-color: rgb(2, 17, 41);
   display: flex;
   justify-content: space-between;
   padding-left: 0;
@@ -148,9 +150,9 @@ export default {
   }
 }
 .el-aside {
-  background-color: #bbb;
+  background-color: #545c64;
   border-right-style: solid;
-  border-color:#aaa;
+  border-color:rgb(67,74,80);
   //background-image: linear-gradient(to right, #015294 , #000000);
   // 菜单右边框对不齐
   .el-menu {
@@ -159,13 +161,13 @@ export default {
   }
 }
 .el-main {
-  background-color: #fff;
+  background-color: rgb(236,242,246);
 }
 .el-footer {
-  background-color: #ddd;
+  background-color: #828b94;
 }
 .toggle-button {
-  background-color: #eee;
+  background-color: rgb(67,74,80);
   font-size: 10px;
   line-height: 30px;
   color: #fff;
@@ -173,4 +175,5 @@ export default {
   //letter-spacing: 0.2em; /* 字体间距 */
   cursor: pointer; /* 鼠标放上去变成手 */
 }
+
 </style>
