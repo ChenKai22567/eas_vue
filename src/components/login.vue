@@ -87,7 +87,7 @@ export default {
         if (res.meta.status !== 200)
           return this.$message.error('登录失败！') /* 参见element中消息提示 */
         this.$message.success({
-          message: '登陆成功',
+          message: '登录成功！',
           center: true
         })
         // 登录成功后:

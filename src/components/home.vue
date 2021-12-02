@@ -5,15 +5,19 @@
     <el-header height="55px"
       ><!-- 这个element标签就是类名 可以直接拿这个设置样式 -->
       <div>
-        <img src="../assets/logo.png" alt="最右侧图标" />
+        <!--<img src="../assets/logo.png" alt="最右侧图标" />-->
         <span>救助信息后台管理系统</span>
       </div>
-      <el-button type="info" @click="logout" icon="el-icon-switch-button">
+      <div>
+      <!--<el-avatar :size="43"> admin </el-avatar>-->
+      <el-button type="info" @click="logout" icon="el-icon-switch-button" size="small">
         退出</el-button>
+      </div>
     </el-header>
     <el-container>
       <!-- 页面主体区域(侧边栏) -->
       <el-aside :width="isCollapse ? '65px' : '200px'">
+        <el-scrollbar style="width: 100%">
         <div class="toggle-button" @click="toggleCollapse">
           <el-switch
             v-model="isCollapse"
@@ -43,7 +47,7 @@
             <!-- 一级菜单的模板区域 -->
             <template slot="title">
               <!-- 图标 -->
-              <i :class="iconsObj[item.id]"></i>
+              <i :class="iconsObj[item.id]"></i> <!--注意此处的[],在属性不确定的时候使用-->
               <!-- 文本 -->
               <span>{{ item.authName }}</span>
               <!--胡须语法的动态绑定-->
@@ -61,16 +65,17 @@
               <span>{{ subItem.authName }}</span>
             </el-menu-item>
           </el-submenu>
-        </el-menu> </el-aside
-      ><!-- 侧边栏 -->
+        </el-menu> 
+        </el-scrollbar>
+        </el-aside><!-- 侧边栏 -->
       <!-- 右侧内容主体 -->
       <el-container>
         <el-main>
         <!-- 路由占位符 welcome users等子组件,哪里有路由放在哪里 -->
         <router-view></router-view>
         </el-main>
-        <el-footer height="40px">
-           <el-divider content-position="center"><i class="el-icon-s-help">救助信息后台管理系统</i></el-divider>
+        <el-footer height="15px">
+           <i class="el-icon-s-help">救助信息后台管理系统</i>
         </el-footer>
       </el-container>
     </el-container>
@@ -129,6 +134,7 @@ export default {
 <style lang="less" scoped>
 .home-container {
   height: 100%;
+  background-color: rgb(236,242,246);
 }
 .el-header {
   background-color: rgb(2, 17, 41);
@@ -138,8 +144,6 @@ export default {
   align-items: center; /*使内部组件 el-button上下居中 */
   color: #fff;
   font-size: 25px;
-
-
   > div {
     display: flex;
     align-items: center;
@@ -149,10 +153,18 @@ export default {
     }
   }
 }
+.el-icon-s-help{
+  margin-top: -23px;
+  margin-left: 40%;
+  color: #aaa;
+
+}
 .el-aside {
   background-color: #545c64;
   border-right-style: solid;
   border-color:rgb(67,74,80);
+  margin:20px 0px 20px 20px;  //上右下左
+  border-radius: 10px;
   //background-image: linear-gradient(to right, #015294 , #000000);
   // 菜单右边框对不齐
   .el-menu {
@@ -164,7 +176,12 @@ export default {
   background-color: rgb(236,242,246);
 }
 .el-footer {
-  background-color: #828b94;
+  display: flex;
+  height: 10px;
+  align-items: center;
+  text-align: center;
+  //background-color: #828b94;
+  background-color: rgb(236,242,246);
 }
 .toggle-button {
   background-color: rgb(67,74,80);
@@ -174,6 +191,9 @@ export default {
   text-align: center;
   //letter-spacing: 0.2em; /* 字体间距 */
   cursor: pointer; /* 鼠标放上去变成手 */
+}
+.el-main{
+  background-color: rgb(236,242,246);
 }
 
 </style>

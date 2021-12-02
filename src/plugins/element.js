@@ -27,7 +27,14 @@ import {
   Pagination,
   Dialog,
   Divider,
-  MessageBox
+  MessageBox,
+  Tag,
+  Scrollbar,
+  Backtop,
+  Tree,
+  Avatar,
+  Select,
+  Option
 } from 'element-ui'
 
 Vue.use(Button)
@@ -56,5 +63,12 @@ Vue.use(Tooltip)
 Vue.use(Pagination)
 Vue.use(Dialog)
 Vue.use(Divider)
+Vue.use(Tag)
+Vue.use(Scrollbar)
+Vue.use(Backtop)
+Vue.use(Tree)
+Vue.use(Avatar)
+Vue.use(Select)
+Vue.use(Option)
 Vue.prototype.$message = Message   //弹框提示组件，与其它不同需要全局挂载
 Vue.prototype.$confirm = MessageBox.confirm   //messagebox的确认弹框

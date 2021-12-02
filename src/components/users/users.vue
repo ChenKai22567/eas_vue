@@ -11,7 +11,7 @@
     <el-card>
       <!-- layout栅格组件 row行 col列 span是宽度（共24） gutter是间隙（合适即可） -->
       <el-row :gutter="130">
-        <el-col :span="9">
+        <el-col :span="11">
           <!-- 搜索与添加区域 -->
           <el-input
             placeholder="在这里可以按用户姓名搜索"
@@ -26,28 +26,42 @@
             ></el-button>
           </el-input>
         </el-col>
-        
-        <el-col :span="4">
+        <el-col :span="2">
           <el-button type="primary" @click="addDialogVisible = true"
-            >添加用户</el-button>
+            >添加用户</el-button
+          >
           <!-- 点击这个按钮 对话框显示出来 -->
         </el-col>
-
+        <el-col :span="2">
+          <el-button type="danger" @click="removeUserAll()">批量删除</el-button>
+          <!-- 点击这个按钮 对话框显示出来 -->
+        </el-col>
       </el-row>
       <!-- 用户列表区域 -->
-      <el-table :data="userlist" border stripe >
+      <el-table
+        :data="userlist"
+        border
+        stripe
+        :row-style="{ height: '20px' }"
+        :cell-style="{ padding: '7px' }"
+        row-key="id"
+        @selection-change="handleSelectionChange"
+      >
         <!-- 跟menu一样 把要展示的数据存储到table自带的属性data里面 下面再用prop取对应的数据 和v-model双向绑定 -->
-
+        <el-table-column type="selection" width="55" :reserve-selection="true">
+        </el-table-column>
         <el-table-column label="#" type="index"></el-table-column>
         <!-- column索引列 只要加上type="index" -->
         <el-table-column label="姓名" prop="username"></el-table-column>
         <el-table-column label="邮箱" prop="email"></el-table-column>
         <el-table-column label="电话" prop="mobile"></el-table-column>
         <el-table-column label="角色" prop="role_name"></el-table-column>
-        <el-table-column label="状态"  ><!--作用域插槽覆盖prop-->
+        <el-table-column label="状态"
+          ><!--作用域插槽覆盖prop-->
           <!--2.6将slot slot-cope弃用，完整的插槽需要template-->
           <!--作用域插槽 v-slot="scope" scope.row从userlist里获取的本行所有数据-->
-          <template v-slot="scope"> <!--scope只是名字-->
+          <template v-slot="scope">
+            <!--scope只是名字-->
             <el-switch
               v-model="scope.row.mg_state"
               active-text="开"
@@ -89,7 +103,7 @@
                 type="warning"
                 icon="el-icon-setting"
                 size="mini"
-                @click="setRole(scope.row)"
+                @click="setRole(line.row)"
                 plain
               ></el-button>
             </el-tooltip>
@@ -101,7 +115,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="queryInfo.pagenum"
-        :page-sizes="[1, 2, 4, 5]"
+        :page-sizes="[1, 4, 6, 10]"
         :page-size="queryInfo.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
@@ -114,8 +128,8 @@
       title="添加新用户"
       :visible.sync="addDialogVisible"
       width="35%"
-      @close="addDialogClosed">
-
+      @close="addDialogClosed"
+    >
       <!-- 内容主体区域 -->
       <el-form
         :model="addForm"
@@ -146,17 +160,30 @@
     </el-dialog>
 
     <!-- 修改用户的对话框 -->
-    <el-dialog title="修改用户信息" :visible.sync="editDialogVisible" width="35%" @close="editDialogClosed">
-      <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="70px" class="editForm">
+    <el-dialog
+      title="修改用户信息"
+      :visible.sync="editDialogVisible"
+      width="35%"
+      @close="editDialogClosed"
+    >
+      <el-form
+        :model="editForm"
+        :rules="editFormRules"
+        ref="editFormRef"
+        label-width="70px"
+        class="editForm"
+      >
         <el-form-item label="姓 名：">
-          <el-input v-model="editForm.username" disabled></el-input>  <!--对话框禁用的属性-->
+          <el-input v-model="editForm.username" disabled></el-input>
+          <!--对话框禁用的属性-->
         </el-form-item>
         <el-form-item label="邮 箱：" prop="email">
           <el-input v-model="editForm.email"></el-input>
         </el-form-item>
         <el-form-item label="电 话：" prop="mobile">
           <el-input v-model="editForm.mobile"></el-input>
-        </el-form-item>    <!--根据接口内容绑定-->
+        </el-form-item>
+        <!--根据接口内容绑定-->
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
@@ -164,6 +191,26 @@
       </span>
     </el-dialog>
 
+    <!-- 分配角色的对话框 -->
+    <el-dialog title="为用户分配角色" :visible.sync="setRoleDialogVisible" width="25%" @close="setRoleDialogClosed">
+      <el-form label-width="60px"
+        class="allotForm">
+        <el-form-item class="allot-item">当前的用户：{{userInfo.username}}</el-form-item>
+        <el-form-item class="allot-item">当前的角色：{{userInfo.role_name}}</el-form-item>
+        <el-form-item class="allot-item">分配新角色：
+          <el-select v-model="selectedRoleId" placeholder="请选择角色">
+            <el-option v-for="item in rolesList" :key="item.id" :label="item.roleName" :value="item.id"> 
+              <!-- :value="item.id"选中的其实是id（都是用的id） 这样v-model是当前选中的value值（即id）和selectedRoleId进行绑定（？）当点击确定的时候就将selectedRoleId保存到当前的用户信息中 -->
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setRoleDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -190,6 +237,8 @@ export default {
       callback(new Error('请输入正确的手机号'))
     }
     return {
+      //多选数量
+      multipleSelection: [],
       // 获取用户列表的参数对象 原数据是一整条 根据页数和条数返回相应的数据 如每页显示3条 第2页 就会把第4 5 6个数据返回 拿到后就把这3个渲染出来 total控制着页码组件的数据显示
       queryInfo: {
         // 搜索关键字 和搜索框的value进行了双向绑定
@@ -197,7 +246,7 @@ export default {
         // 当前的页数
         pagenum: 1,
         // 当前每页显示多少条数据
-        pagesize: 4
+        pagesize: 6
       },
       userlist: [] /* 返回的数据存储到这里 */,
       total: 0 /*总数据条数*/,
@@ -209,15 +258,24 @@ export default {
         email: '',
         mobile: ''
       },
-      // 添加表单的验证规则对象 跟之前一样
+      // 添加表单的验证规则对象，跟之前一样
       addFormRules: {
         username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' } /* 必填项 验证是否输入了用户名 */,
-          { min: 3, max: 10, message: '用户名的长度在3~10个字符之间', trigger: 'blur' }
+          {
+            required: true,
+            message: '请输入用户名',
+            trigger: 'blur'
+          } /* 必填项 验证是否输入了用户名 */,
+          {
+            min: 3,
+            max: 10,
+            message: '用户名的长度在3~10个字符之间',
+            trigger: 'blur'
+          }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 15, message: '密码的长度在6~15个字符之间', trigger: 'blur' }
+          { min: 6, max: 15, message: '密码的长度在6~15个字符之间', trigger: 'blur'}
         ],
         email: [
           { required: true, message: '请输入邮箱', trigger: 'blur' },
@@ -243,7 +301,15 @@ export default {
           { required: true, message: '请输入用户电话号码', trigger: 'blur' },
           { validator: checkMobile, trigger: 'blur' }
         ]
-      }
+      },
+      // 控制分配角色对话框的显示与隐藏
+      setRoleDialogVisible: false,
+      // 需要被分配角色的用户信息
+      userInfo: {},
+      // 所有角色的数据列表
+      rolesList: [],
+      // 已选中的角色Id值
+      selectedRoleId: ''
     }
   },
   created() {
@@ -261,6 +327,7 @@ export default {
       }
       this.userlist = res.data.users
       this.total = res.data.total
+      this.$message.success('获取用户数据成功！')
       console.log(res)
     },
     // 监听 下拉页码 改变的事件 newsize为选择的条数 选择了几条就把这个作为参数传给数据请求中重新请求
@@ -294,7 +361,8 @@ export default {
     },
     // 点击确定，添加新用户 进行预校验
     addUser() {
-      this.$refs.addFormRef.validate(async valid => { /* elementui校验通过 valid为true,否则为false */
+      this.$refs.addFormRef.validate(async valid => {
+        /* elementui校验通过 valid为true,否则为false */
         if (!valid) return
         // 校验通过 发起添加用户的网络请求
         const { data: res } = await this.$http.post('users', this.addForm)
@@ -333,7 +401,7 @@ export default {
         // 发起修改用户信息的数据请求
         const { data: res } = await this.$http.put(
           'users/' + this.editForm.id,
-          { 
+          {
             email: this.editForm.email,
             mobile: this.editForm.mobile
           }
@@ -349,23 +417,27 @@ export default {
         this.$message.success('修改用户信息成功！')
       })
     },
-       // 根据Id删除对应的用户信息
+    // 根据Id删除对应的用户信息
     async removeUserById(id) {
       // 弹框询问用户是否删除数据（参见element）
-      const confirmResult = await this.$confirm( /* 先给vue挂载了$confirm函数 里面的参数代表弹框显示的内容样式 函数的返回值是promise 所以可以用asyc和await来优化 这样返回的值即confirmResult就是一个字符串了（之前的是一个数据）如果确定就是confirm 取消就是cancle 由catch捕获 */
-        '  此操作将永久删除该用户，请选择是否确认？','删除操作',
-        { //因为$confirm返回promise所有可以使用await优化
+      const confirmResult = await this.$confirm(
+        /* 先给vue挂载了$confirm函数 里面的参数代表弹框显示的内容样式 函数的返回值是promise 所以可以用asyc和await来优化 这样返回的值即confirmResult就是一个字符串了（之前的是一个数据）如果确定就是confirm 取消就是cancle 由catch捕获 */
+        '  此操作将永久删除该用户及其数据，请选择是否确认？','删除用户数据',
+        {
+          //因为$confirm返回promise所有可以使用await优化
           confirmButtonText: '确 定',
           cancelButtonText: '取 消',
           type: 'warning'
           //center: true  //文字居中
         }
-      ).catch(err => err) /* 点取消则由catch捕获异常 return err的简写 把err返回 */
+      ).catch(
+        err => err
+      ) /* 点取消则由catch捕获异常 return err的简写 把err返回 */
       // 此时如果用户确认删除，则返回值为字符串 confirm
       // 如果用户取消了删除，则返回值为字符串 cancel
       // console.log(confirmResult)
       if (confirmResult !== 'confirm') {
-        return this.$message.info('已取消删除')
+        return this.$message.info('已取消删除该用户数据')
       }
       // 确认删除 先发送请求 判断删除是否成功 不用传id参数
       const { data: res } = await this.$http.delete('users/' + id)
@@ -375,8 +447,76 @@ export default {
       this.$message.success('删除用户操作成功！')
       this.getUserList()
     },
+    //操作多选
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
+    async removeUserAll(id) {
+      // 弹框询问用户是否删除数据（参见element）
+      const confirmResult = await this.$confirm(
+        /* 先给vue挂载了$confirm函数 里面的参数代表弹框显示的内容样式 函数的返回值是promise 所以可以用asyc和await来优化 这样返回的值即confirmResult就是一个字符串了（之前的是一个数据）如果确定就是confirm 取消就是cancle 由catch捕获 */
+        '  此操作将永久删除所有选中用户数据，请选择是否确认？', '批量删除操作',
+        {
+          //因为$confirm返回promise所有可以使用await优化
+          confirmButtonText: '确 定',
+          cancelButtonText: '取 消',
+          type: 'warning'
+          //center: true  //文字居中
+        }
+      ).catch(
+        err => err
+      )
+      if (confirmResult !== 'confirm') {
+        return this.$message.info('已取消批量删除操作')
+      }
+     const length = this.multipleSelection.length;
+    for (let i = 0; i < length; i++) {
+     const {data:res} = await this.$http.delete('users/'+this.multipleSelection[i].id)
+     if (res.meta.status !== 200) {
+        return this.$message.error('批量删除用户操作失败！')
+      }
+    }
+      this.$message.success('批量删除用户操作成功！')
+      this.getUserList()
+      },
+    // 展示分配角色的对话框
+    async setRole(userInfo) {
+      this.userInfo = userInfo
+
+      // 在展示对话框之前，先获取所有的角色列表并存储起来
+      const { data: res } = await this.$http.get('roles')
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取角色列表失败！')
+      }
+
+      this.rolesList = res.data
+
+      this.setRoleDialogVisible = true
+    },    
+      // 点击确定，分配角色
+    async saveRoleInfo() {
+      // 如果还没选择新的角色
+      if (!this.selectedRoleId) {
+        return this.$message.error('请选择要分配的角色！')
+      }
+      const { data: res } = await this.$http.put(
+        'users/'+this.userInfo.id+'/role',
+        {rid: this.selectedRoleId}
+      )
+      if (res.meta.status !== 200) {
+        return this.$message.error('分配用户角色失败！')
+      }
+      this.$message.success('分配用户角色成功！')
+      this.getUserList()
+      this.setRoleDialogVisible = false
+    },
+    // 监听关闭分配角色的对话框，清空选项
+    setRoleDialogClosed() {
+      this.selectedRoleId = ''
+      this.userInfo = {}
+    }
+    }
   }
-}
 </script>
 
 <style lang="less" scoped>
@@ -386,7 +526,16 @@ export default {
 .editForm {
   padding: 0px 20px 0px 0px; //上右下左
 }
-.el-pagination{
+.el-pagination {
   padding: 15px 0px 0px 0px;
+}
+.el-table{
+  box-sizing: border-box;
+}
+.allot-item{
+    margin-bottom: 0px;
+}
+.allotForm {
+  padding: 0px 70px 0px 0px; //上右下左
 }
 </style>
