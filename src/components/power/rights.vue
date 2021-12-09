@@ -3,10 +3,51 @@
     <!-- 面包屑导航区域 -->
 
     <!-- 卡片视图 -->
+    <el-row :gutter="15">
+      <el-col :span="5">
+    <el-card align="middle" class="card_left">
+      <el-row>
+        <el-col :span="16">
+        批量操作区域:
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-button type="primary" 
+          @click="clearFilter" 
+          icon="el-icon-close"
+          plain
+            >清除过滤器</el-button
+          >
+          <!-- 点击这个按钮 对话框显示出来 -->
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-button icon="el-icon-refresh"
+          @click="getRightsList()" type="info"
+          plain>刷新本页面
+          </el-button>
+          <!-- 点击这个按钮 刷新 -->
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-empty description="此处为可视化"></el-empty>
+      </el-row>
+    </el-card>
+      </el-col>
+        <el-col :span="19">
     <el-card >
-      <el-button @click="clearFilter" type="primary" >清除权限等级过滤器</el-button>
-      <el-table :data="rightsList" border stripe :row-style="{height:'20px'}" 
-      :cell-style="{padding:'7px'}" ref="levelRef" height="360px"
+      <el-row>
+        <el-col>
+          数据展示区域：
+        </el-col>
+      </el-row>
+      <el-table 
+      v-loading="loading"
+      element-loading-text="正在向服务器请求数据"
+      :data="rightsList" border stripe :row-style="{height:'20px'}" 
+      :cell-style="{padding:'7px'}" ref="levelRef" height="383px"
       highlight-current-row @current-change="handleCurrentChange">
         <el-table-column label="#" type="index" width="60"></el-table-column>  <!--注意列宽的设置方法-->
         <el-table-column label="所有权限名称" prop="authName"></el-table-column>
@@ -25,6 +66,8 @@
         </el-table-column>
       </el-table>
     </el-card>
+    </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -32,6 +75,8 @@
 export default {
   data() {
     return {
+       //加载动画
+      loading: true,
       // 权限列表
       rightsList: []
     }
@@ -43,6 +88,7 @@ export default {
   methods: {
     // 获取权限列表
     async getRightsList() {
+      this.loading = true
       const { data: res } = await this.$http.get('rights/list')
       if (res.meta.status !== 200) {
         return this.$message.error('获取权限列表失败！')
@@ -51,6 +97,7 @@ export default {
       this.$message.success('获取权限列表数据成功！')
         //挂载到自己的对象里
       //console.log(this.rightsList)
+      this.loading = false
     },
     //清除过滤器
      clearFilter() {
@@ -84,5 +131,14 @@ export default {
     font-size: 16px;
     margin-left: 10px;
   }
+}
+.el-row {
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+.card_left{
+  height: 465px;
 }
 </style>

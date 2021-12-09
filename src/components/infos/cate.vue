@@ -2,24 +2,60 @@
   <div>
     <!-- 面包屑导航区域-->
     <!-- 卡片视图 -->
-    <el-card>
-      <!-- 添加角色按钮区域 -->
-      <el-row :gutter="130">
-        <el-col :span="4">
-          <el-button type="primary" @click="showAddCateDialog()"
-            >添加救助信息分类</el-button
-          ></el-col
-        >
-        <el-col :span="4">
-          <el-button type="danger" @click="removeCateAll()"
-            >批量删除分类</el-button
+    <el-row :gutter="15">
+      <el-col :span="5">
+    <el-card align="middle" class="card_left">
+      <el-row>
+        <el-col :span="16">
+        批量操作区域:
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-button type="primary" 
+          @click="showAddCateDialog()"
+          icon="el-icon-plus"
+          plain
+            >添加分类</el-button
           >
           <!-- 点击这个按钮 对话框显示出来 -->
         </el-col>
       </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-button type="danger" 
+          @click="removeCateAll()"
+          icon="el-icon-close"
+          plain>批量删除</el-button>
+          <!-- 点击这个按钮 对话框显示出来 -->
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-button icon="el-icon-refresh"
+          @click="getCateList()" type="info"
+          plain>刷新页面
+          </el-button>
+          <!-- 点击这个按钮 刷新 -->
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-empty description="此处为可视化"></el-empty>
+      </el-row>
+    </el-card>
+      </el-col>
+        <el-col :span="19">
+    <el-card>
 
+<el-row>
+        <el-col>
+          数据展示区域：
+        </el-col>
+      </el-row>
       <!-- 表格区域 -->
       <el-table
+        v-loading="loading"
+        element-loading-text="正在向服务器请求数据"
         class="treeTable"
         :data="catelist"
         row-key="cat_id"
@@ -30,7 +66,7 @@
         stripe
         :row-style="{ height: '20px' }"
         :cell-style="{ padding: '7px' }"
-        height="312px"
+        height="340px"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       >
         <el-table-column
@@ -41,8 +77,8 @@
         ></el-table-column>
         <el-table-column type="index" label="#" width="60"></el-table-column>
         <!-- column索引列 只要加上type="index" -->
-        <el-table-column label="分类名称" prop="cat_name"></el-table-column>
-        <el-table-column label="是否有效" prop="cat_deleted">
+        <el-table-column label="分类名称" prop="cat_name" width="180"></el-table-column>
+        <el-table-column label="是否有效" prop="cat_deleted" width="80">
           <template v-slot="state">
             <i
               class="el-icon-success"
@@ -100,9 +136,13 @@
         :page-size="queryInfo.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
+        background
       >
       </el-pagination>
     </el-card>
+     </el-col>
+    </el-row>
+
 
     <!-- 添加分类对话框 -->
     <el-dialog
@@ -191,6 +231,8 @@
 export default {
   data() {
     return {
+       //加载动画
+      loading: true,
       // 查询条件
       queryInfo: {
         type: 3,
@@ -249,7 +291,8 @@ export default {
   },
   methods: {
     // 获取救助信息分类数据
-    async getCateList() {
+    async getCateList() { 
+      this.loading = true
       const { data: res } = await this.$http.get('categories', {
         params: this.queryInfo
       })
@@ -262,6 +305,7 @@ export default {
       this.catelist = res.data.result
       // 存储总数据条数
       this.total = res.data.total
+      this.loading = false
     },
     // 监听 下拉页码 改变的事件
     handleSizeChange(newSize) {
@@ -445,5 +489,14 @@ export default {
 }
 .editForm {
   padding: 0px 30px 0px 0px; //上右下左
+}
+.el-row {
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+.card_left{
+  height: 465px;
 }
 </style>

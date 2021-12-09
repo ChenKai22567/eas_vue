@@ -323,6 +323,7 @@ export default {
     border-right: none;
     font-weight: bold;
   }
+  height: 520px;
 }
 .el-main {
   background-color: rgb(236, 242, 246);

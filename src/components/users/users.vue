@@ -352,6 +352,7 @@ export default {
   },
   methods: {
     async getUserList() {
+      //控制加载动画
       this.loading = true
       /*await即可获得数据对象，并将其解构赋值出data属性重命名为res*/
       const { data: res } = await this.$http.get('users', {

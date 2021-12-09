@@ -1,19 +1,55 @@
 <template>
     <div>
-
+<el-row :gutter="15">
+      <el-col :span="5">
+    <el-card align="middle" class="card_left">
+      <el-row>
+        <el-col :span="16">
+        批量操作区域:
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-button type="primary" 
+           @click="addDialogVisible = true" 
+          icon="el-icon-plus"
+          plain
+            >添加新用户</el-button
+          >
+          <!-- 点击这个按钮 对话框显示出来 -->
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-button icon="el-icon-refresh"
+          @click="getRightsList()" type="info"
+          plain>刷新本页面
+          </el-button>
+          <!-- 点击这个按钮 刷新 -->
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-empty description="此处为可视化"></el-empty>
+      </el-row>
+    </el-card>
+      </el-col>
+        <el-col :span="19">
 
     <!-- 卡片视图 -->
     <el-card>
-      <!-- 添加角色按钮区域 -->
+      <!-- 汉字 -->
       <el-row>
         <el-col>
-          <el-button type="primary" 
-          @click="addDialogVisible = true" >创建新角色</el-button>
+          数据展示区域：
         </el-col>
       </el-row>
 
       <!-- 角色列表区域 -->
-      <el-table :data="rolelist" border stripe 
+      <el-table 
+      v-loading="loading"
+      element-loading-text="正在向服务器请求数据"
+      :data="rolelist" border stripe 
+      height="383px"
         :row-style="{ height: '23px' }"
         :cell-style="{ padding: '7px' }">
 
@@ -64,6 +100,8 @@
         </el-table-column>
       </el-table>
     </el-card>
+        </el-col>
+    </el-row>
 
     <!-- 分配权限的对话框 -->
     <el-dialog title="为当前角色分配权限" :visible.sync="setRightsDialogVisible" 
@@ -152,6 +190,8 @@
 export default {
     data() {
     return {
+       //加载动画
+      loading: true,
       // 所有角色列表数据
       rolelist: [],
       // 控制分配权限对话框的显示与隐藏
@@ -201,6 +241,7 @@ export default {
   methods: {
     // 获取所有角色的列表
     async getRolesList() {
+      this.loading = true
       const { data: res } = await this.$http.get('roles')
 
       if (res.meta.status !== 200) {
@@ -209,6 +250,7 @@ export default {
       this.rolelist = res.data
       this.$message.success('获取角色列表成功！')
       console.log(this.rolelist)
+      this.loading = false
     },    
     // 根据Id删除对应的权限，详情参见users中的注释
     async removeRightById(role, rightId) {
@@ -387,5 +429,14 @@ export default {
 }
 .editForm {
   padding: 0px 20px 0px 0px; //上右下左
+}
+.el-row {
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+.card_left{
+  height: 465px;
 }
 </style>
