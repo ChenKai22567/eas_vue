@@ -6,6 +6,7 @@ import welcome from '../components/welcome.vue'
 import users from '../components/users/users.vue' 
 import rights from '../components/power/rights.vue'
 import roles from '../components/power/roles.vue'
+import cate from '../components/infos/cate.vue'
 
 Vue.use(VueRouter)
 
@@ -15,10 +16,11 @@ const routes = [
   { path: '/home', component: home, 
     redirect: '/welcome',
     children: [
-    { path: '/welcome', component: welcome },
-    { path: '/users', component: users },
-    { path: '/rights', component: rights },
-    { path: '/roles', component: roles }
+    { path: '/welcome', component: welcome}, 
+    { path: '/users', component: users, meta:{ keepAlive: true, comp: users, name: '用户列表'} },
+    { path: '/rights', component: rights, meta:{ keepAlive: true, comp: rights, name: '使用权限列表'} },
+    { path: '/roles', component: roles, meta:{ keepAlive: true, comp: users, name: '救助角色列表'} },
+    { path: '/categories', component: cate, meta:{ keepAlive: true, comp: users, name: '救助信息分类'} }
   ]
  }
 ]
@@ -26,6 +28,7 @@ const routes = [
 const router = new VueRouter({
   routes
 })
+export default router
 
 // 挂载路由导航守卫
 router.beforeEach((to, from, next) => {
@@ -40,4 +43,4 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-export default router
+

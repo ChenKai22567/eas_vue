@@ -90,6 +90,7 @@ export default {
           message: '登录成功！',
           center: true
         })
+        window.sessionStorage.setItem('userid', res.data.id)
         // 登录成功后:
         // 1. 将登录成功之后的 token，保存到客户端的 sessionStorage 中 之后的网络请求中要拿这个token放入请求头中
         //   1.1 项目中除了登录之外的其他API接口，必须在登录之后才能访问 token就是登录令牌

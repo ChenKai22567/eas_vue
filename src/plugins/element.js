@@ -34,7 +34,15 @@ import {
   Tree,
   Avatar,
   Select,
-  Option
+  Option,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  Cascader,
+  Empty,
+  Loading,
+  Tabs,
+  TabPane
 } from 'element-ui'
 
 Vue.use(Button)
@@ -70,5 +78,13 @@ Vue.use(Tree)
 Vue.use(Avatar)
 Vue.use(Select)
 Vue.use(Option)
+Vue.use(Dropdown)
+Vue.use(DropdownItem)
+Vue.use(DropdownMenu)
+Vue.use(Cascader)
+Vue.use(Empty)
+Vue.use(Loading)
+Vue.use(Tabs)
+Vue.use(TabPane)
 Vue.prototype.$message = Message   //弹框提示组件，与其它不同需要全局挂载
 Vue.prototype.$confirm = MessageBox.confirm   //messagebox的确认弹框

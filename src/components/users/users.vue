@@ -1,17 +1,53 @@
 <template>
   <div>
-    <!-- 面包屑导航区域 这个组件的样式其他组件也用的到 所以写到公共样式里 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <!-- 点击回到welcome 因为重定向 -->
-      <el-breadcrumb-item>求助人员管理</el-breadcrumb-item>
-      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-    </el-breadcrumb>
     <!-- 卡片视图区域 -->
+    <el-row :gutter="15">
+      <el-col :span="5">
+    <el-card align="middle" class="card_left">
+      <el-row>
+        <el-col :span="16">
+        批量操作区域:
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-button type="primary" 
+          @click="addDialogVisible = true"
+          icon="el-icon-plus"
+          plain
+            >添加用户</el-button
+          >
+          <!-- 点击这个按钮 对话框显示出来 -->
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-button type="danger" 
+          @click="removeUserAll()"
+          icon="el-icon-close"
+          plain>批量删除</el-button>
+          <!-- 点击这个按钮 对话框显示出来 -->
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-button icon="el-icon-refresh"
+          @click="getUserList()" type="info"
+          plain>刷新页面
+          </el-button>
+          <!-- 点击这个按钮 刷新 -->
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-empty description="此处为可视化"></el-empty>
+      </el-row>
+    </el-card>
+      </el-col>
+        <el-col :span="19">
     <el-card>
       <!-- layout栅格组件 row行 col列 span是宽度（共24） gutter是间隙（合适即可） -->
       <el-row :gutter="130">
-        <el-col :span="11">
+        <el-col :span="15">
           <!-- 搜索与添加区域 -->
           <el-input
             placeholder="在这里可以按用户姓名搜索"
@@ -26,19 +62,12 @@
             ></el-button>
           </el-input>
         </el-col>
-        <el-col :span="2">
-          <el-button type="primary" @click="addDialogVisible = true"
-            >添加用户</el-button
-          >
-          <!-- 点击这个按钮 对话框显示出来 -->
-        </el-col>
-        <el-col :span="2">
-          <el-button type="danger" @click="removeUserAll()">批量删除</el-button>
-          <!-- 点击这个按钮 对话框显示出来 -->
-        </el-col>
+        
       </el-row>
       <!-- 用户列表区域 -->
       <el-table
+        v-loading="loading"
+        element-loading-text="正在向服务器请求数据"
         :data="userlist"
         border
         stripe
@@ -46,17 +75,18 @@
         :cell-style="{ padding: '7px' }"
         row-key="id"
         @selection-change="handleSelectionChange"
+        height="320px"
       >
         <!-- 跟menu一样 把要展示的数据存储到table自带的属性data里面 下面再用prop取对应的数据 和v-model双向绑定 -->
-        <el-table-column type="selection" width="55" :reserve-selection="true">
+        <el-table-column type="selection" width="55" :reserve-selection="true" fixed>
         </el-table-column>
-        <el-table-column label="#" type="index"></el-table-column>
+        <el-table-column label="#" type="index" width="50"></el-table-column>
         <!-- column索引列 只要加上type="index" -->
-        <el-table-column label="姓名" prop="username"></el-table-column>
-        <el-table-column label="邮箱" prop="email"></el-table-column>
-        <el-table-column label="电话" prop="mobile"></el-table-column>
-        <el-table-column label="角色" prop="role_name"></el-table-column>
-        <el-table-column label="状态"
+        <el-table-column label="姓名" prop="username" width="130"></el-table-column>
+        <el-table-column label="邮箱" prop="email" width="200"></el-table-column>
+        <el-table-column label="电话" prop="mobile" width="180"></el-table-column>
+        <el-table-column label="角色" prop="role_name" width="130"></el-table-column>
+        <el-table-column label="状态" width="180"
           ><!--作用域插槽覆盖prop-->
           <!--2.6将slot slot-cope弃用，完整的插槽需要template-->
           <!--作用域插槽 v-slot="scope" scope.row从userlist里获取的本行所有数据-->
@@ -71,7 +101,7 @@
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200px">
+        <el-table-column label="操作" width="190" fixed="right">
           <template v-slot="line">
             <!-- 作用域插槽 -->
             <!-- 修改按钮 -->
@@ -119,9 +149,12 @@
         :page-size="queryInfo.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
+        background
       >
       </el-pagination>
     </el-card>
+        </el-col>
+    </el-row>
 
     <!-- 添加用户的对话框 根据addDialogVisible显示或隐藏 -->
     <el-dialog
@@ -309,7 +342,9 @@ export default {
       // 所有角色的数据列表
       rolesList: [],
       // 已选中的角色Id值
-      selectedRoleId: ''
+      selectedRoleId: '',
+      //加载动画
+      loading: true
     }
   },
   created() {
@@ -317,6 +352,7 @@ export default {
   },
   methods: {
     async getUserList() {
+      this.loading = true
       /*await即可获得数据对象，并将其解构赋值出data属性重命名为res*/
       const { data: res } = await this.$http.get('users', {
         params: this
@@ -329,6 +365,7 @@ export default {
       this.total = res.data.total
       this.$message.success('获取用户数据成功！')
       console.log(res)
+      this.loading = false
     },
     // 监听 下拉页码 改变的事件 newsize为选择的条数 选择了几条就把这个作为参数传给数据请求中重新请求
     handleSizeChange(newSize) {
@@ -537,5 +574,20 @@ export default {
 }
 .allotForm {
   padding: 0px 70px 0px 0px; //上右下左
+}
+.el-table >.el-table__fixed-right {
+    height: 100% !important; //设置高优先，以覆盖内联样式
+  }
+body {
+    margin: 0;
+  }
+.el-row {
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+.card_left{
+  height: 465px;
 }
 </style>

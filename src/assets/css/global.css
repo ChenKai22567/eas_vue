@@ -23,3 +23,6 @@ html,body, #app{
 .el-pagination{
     margin-top: 0px;
 }
+.el-cascader-panel .el-scrollbar__wrap {
+    overflow-x: hidden !important;
+}

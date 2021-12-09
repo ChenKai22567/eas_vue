@@ -1,17 +1,13 @@
 <template>
   <div>
     <!-- 面包屑导航区域 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>用户权限管理</el-breadcrumb-item>
-      <el-breadcrumb-item>使用权限列表</el-breadcrumb-item>
-    </el-breadcrumb>
 
     <!-- 卡片视图 -->
     <el-card >
       <el-button @click="clearFilter" type="primary" >清除权限等级过滤器</el-button>
       <el-table :data="rightsList" border stripe :row-style="{height:'20px'}" 
-      :cell-style="{padding:'7px'}" ref="levelRef">
+      :cell-style="{padding:'7px'}" ref="levelRef" height="360px"
+      highlight-current-row @current-change="handleCurrentChange">
         <el-table-column label="#" type="index" width="60"></el-table-column>  <!--注意列宽的设置方法-->
         <el-table-column label="所有权限名称" prop="authName"></el-table-column>
         <el-table-column label="用户权限路径" prop="path" :formatter="formatter"></el-table-column>
@@ -73,6 +69,10 @@ export default {
      formatter(row, column) {
         return row.path;
       },
+      //选中某行的函数
+    handleCurrentChange(val) {
+        this.currentRow = val;
+    }
   }
 }
 </script>
