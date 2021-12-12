@@ -22,7 +22,7 @@
       <el-row>
         <el-col :span="24">
           <el-button icon="el-icon-refresh"
-          @click="getRightsList()" type="info"
+          @click="getRolesList()" type="info"
           plain>刷新本页面
           </el-button>
           <!-- 点击这个按钮 刷新 -->

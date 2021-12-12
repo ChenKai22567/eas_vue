@@ -18,3 +18,6 @@
 18、element ui的表格展开stripe属性混乱——换用npm上插件vue-tree-with-grid结果相同还更丑 【无法解决】
 19.级联选择器横向滚动条去除：overflow-x: hidden !important;必须加在全局样式中 【解决】
 20. formatter 无效 【待解决】
+21.data中return的数据未定义，检查其他数据是否有错 【可以用到Bcompare】
+22.关闭对话框级联选择器数据保留：注意额外定义的数据清空。  【解决】
+23.level数据无法更改格式：formatter不能用于表单

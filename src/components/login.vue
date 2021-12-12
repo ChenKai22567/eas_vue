@@ -34,6 +34,14 @@
             type="password"
           ></el-input>
         </el-form-item>
+        <el-form-item prop="verifyCode" label="验证码：" 
+         class="verifyCodeItemCss">
+          <el-input class="verify_css" placeholder="不必输入验证码" 
+          v-model="loginForm.verifyCode" @keyup.enter.native="submitForm('loginForm')"
+          label-width="50px"></el-input>
+          <!--关键 ↓-->
+          <div id="v_container"></div>
+</el-form-item>
         <!--按钮区域-->
         <el-form-item class="btns">
           <el-button type="primary" plain @click="login">登录</el-button>
@@ -46,14 +54,16 @@
 </template>
 
 <script>
+import { GVerify } from './verifyCode';
 // 行为区
 export default {
   data() {
     return {
       // 这是登录表单的数据绑定对象 存储着要绑定的数据 用于数据验证 发送请求等
       loginForm: {
-        username: 'admin' /* 后面登录就不用再输 */,
-        password: '123456'
+        username: 'admin' ,/* 后面登录就不用再输 */
+        password: '123456',
+        verifyCode: '后门'
       },
       // 这是表单的验证规则对象
       loginFormRules: {
@@ -66,10 +76,17 @@ export default {
         password: [
           { required: true, message: '请输入登录密码', trigger: 'blur' },
           { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+        ],
+        verifyCode: [
+          { required: true, message: '随意输入即可', trigger: 'blur' },
         ]
-      }
+      },
+       verifyCode: null
     }
   },
+  mounted () {
+    this.verifyCode = new GVerify('v_container')
+},
   methods: {
     // 点击重置按钮，重置登录表单
     resetLoginForm() {
@@ -114,7 +131,7 @@ export default {
 }
 .login_box {
   width: 370px;
-  height: 340px;
+  height: 405px;
   background-color: #fff;
   border-radius: 10px;
   position: absolute; //使其可以进行在页面上的位移
@@ -176,6 +193,25 @@ export default {
 }
 .el-button{
   font-weight: bold;
+}
+#v_container{
+  width: auto;
+  height: auto;
+  padding-top: 15px;
+  margin-left: 10px;
+  transform: translate(-8%,-15%);
+}
+.verify_css{
+  width: 130px;
+  transform: translate(-4%,-20%);
+}
+/deep/.el-form-item__content {
+     display: flex; /*所有子元素block或inline都变成行内块元素的样式*/
+     align-items: center;         /*子元素中线居中*/
+     justify-content: flex-end;       /*子元素靠右*/
+    }
+.verifyCodeItemCss{
+  margin-bottom: 0px !important;
 }
 /*样式区——css与js注释同，此为多行注释
   scope控制样式只影响当前组件，否则全局生效

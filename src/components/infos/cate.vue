@@ -159,7 +159,8 @@
         label-width="100px"
       >
         <el-form-item label="分类名称：" prop="cat_name">
-          <el-input v-model="addCateForm.cat_name"></el-input>
+          <el-input v-model="addCateForm.cat_name"
+          placeholder="无所属则默认顶级分类"></el-input>
         </el-form-item>
         <el-form-item label="所属分类：">
           <!-- 级联选择器 options用来指定数据源，props用来指定配置对象 -->
@@ -210,7 +211,7 @@
         <el-form-item label="新分类名：" prop="cat_name">
           <el-input v-model="editForm.cat_name"></el-input>
         </el-form-item>
-        <el-form-item label="分类等级：" prop="cat_level">
+        <el-form-item label="分类序列：" prop="cat_level">
           <el-input
             v-model="editForm.cat_level"
             disabled
@@ -344,16 +345,16 @@ export default {
     // 父级分类选中项发生改变
     parentCateChanged() {
       console.log(this.selectedKeys)
-      // 如果 selectedKeys 数组中的 length 大于0，说明选中了父级分类
+      // 判断是否选中父级分类，length>0即选中
       if (this.selectedKeys.length > 0) {
-        // 赋值父级分类的Id 即数组中最后一项
+        // 取用数组最后一项
         this.addCateForm.cat_pid = this.selectedKeys[
           this.selectedKeys.length - 1
         ]
-        // 赋值当前分类的等级 三级分类值为2 二级分类值为1 一级分类值为0
+        // 赋值当前分类的等级（三级分类值为2，二级分类值为1，一级分类值为0）
         this.addCateForm.cat_level = this.selectedKeys.length
       } else {
-        // 反之说明没有选中 重置为0（因为可能储存着上一次的结果）
+        // 反之说明没有选中，重置为0（因为可能储存着上一次的结果）
         this.addCateForm.cat_pid = 0
         this.addCateForm.cat_level = 0
       }
@@ -447,9 +448,13 @@ export default {
       // 显示对话框
       this.editDialogVisible = true
     },
-    // 监听修改用户对话框,关闭时重置
+    // 监听修改用户对话框,关闭时重置【注意勿忘引用】
     editDialogClosed() {
       this.$refs.editFormRef.resetFields()
+      // 清空级联选择器存储的数据
+      this.selectedKeys = []
+      this.addCateForm.cat_level = 0
+      this.addCateForm.cat_pid = 0
     },
     // 点击确定进行预验证 并提交数据
     editCateInfo() {
@@ -463,19 +468,16 @@ export default {
           }
         )
         if (res.meta.status !== 200) {
-          return this.$message.error('修改用户信息失败！')
+          return this.$message.error('修改分类信息失败！')
         }
         // 关闭对话框
         this.editDialogVisible = false
         // 刷新数据列表
         this.getCateList()
         // 提示修改成功
-        this.$message.success('修改用户信息成功！')
+        this.$message.success('修改分类信息成功！')
       })
     },
-    formatLevel(row) {
-      return (editForm.cat_level = editForm.cat_level + '级分类')
-    }
   }
 }
 </script>
