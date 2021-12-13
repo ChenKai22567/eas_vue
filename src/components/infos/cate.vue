@@ -215,7 +215,6 @@
           <el-input
             v-model="editForm.cat_level"
             disabled
-            :formatter="formatLevel"
           ></el-input>
         </el-form-item>
         <!--根据接口内容绑定-->

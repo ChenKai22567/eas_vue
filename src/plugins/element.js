@@ -42,7 +42,8 @@ import {
   Empty,
   Loading,
   Tabs,
-  TabPane
+  TabPane,
+  Alert
 } from 'element-ui'
 
 Vue.use(Button)
@@ -86,5 +87,6 @@ Vue.use(Empty)
 Vue.use(Loading)
 Vue.use(Tabs)
 Vue.use(TabPane)
+Vue.use(Alert)
 Vue.prototype.$message = Message   //弹框提示组件，与其它不同需要全局挂载
 Vue.prototype.$confirm = MessageBox.confirm   //messagebox的确认弹框

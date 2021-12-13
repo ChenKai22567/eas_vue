@@ -26,3 +26,7 @@ html,body, #app{
 .el-cascader-panel .el-scrollbar__wrap {
     overflow-x: hidden !important;
 }
+.el-tabs__item{   
+    font-weight: bolder !important;
+    font-family: Microsoft Yahei;
+}

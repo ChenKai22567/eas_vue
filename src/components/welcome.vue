@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>home重定向，路由到/welcome</h3>
-    <el-empty description="此处为首页描述文字"></el-empty>
+    <h3></h3>
+    <el-empty description="此处为首页/welcome描述文字"></el-empty>
   </div>
 </template>

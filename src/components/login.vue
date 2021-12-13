@@ -3,7 +3,7 @@
     <div class="login_box">
       <!-- 头像区域 -->
       <div class="avatar_box">
-        <img src="../assets/1.jpg" alt="头像" />
+        <img src="../assets/2.jpg" alt="头像" />
       </div>
       <div>
          <p id="hi_text">LOGIN</p>  <!--CSS对其格式调整就得用p-->

@@ -7,6 +7,8 @@ import users from '../components/users/users.vue'
 import rights from '../components/power/rights.vue'
 import roles from '../components/power/roles.vue'
 import cate from '../components/infos/cate.vue'
+import params from '../components/infos/params.vue'
+import infos from '../components/infos/infos.vue'
 
 Vue.use(VueRouter)
 
@@ -20,7 +22,9 @@ const routes = [
     { path: '/users', component: users, meta:{ keepAlive: true, comp: users, name: '用户列表'} },
     { path: '/rights', component: rights, meta:{ keepAlive: true, comp: rights, name: '使用权限列表'} },
     { path: '/roles', component: roles, meta:{ keepAlive: true, comp: users, name: '救助角色列表'} },
-    { path: '/categories', component: cate, meta:{ keepAlive: true, comp: users, name: '救助信息分类'} }
+    { path: '/categories', component: cate, meta:{ keepAlive: true, comp: users, name: '救助信息分类'} },
+    { path: '/params', component: params, meta:{ keepAlive: true, comp: users, name: '分类参数设置'} },
+   
   ]
  }
 ]
