@@ -43,7 +43,15 @@ import {
   Loading,
   Tabs,
   TabPane,
-  Alert
+  Alert,
+  Radio,
+  Rate,
+  Steps,
+  Step,
+  Progress,
+  CheckboxGroup,
+  Checkbox,
+  Upload
 } from 'element-ui'
 
 Vue.use(Button)
@@ -88,5 +96,13 @@ Vue.use(Loading)
 Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Alert)
+Vue.use(Radio)
+Vue.use(Rate)
+Vue.use(Steps)
+Vue.use(Step)
+Vue.use(Progress)
+Vue.use(CheckboxGroup)
+Vue.use(Checkbox)
+Vue.use(Upload)
 Vue.prototype.$message = Message   //弹框提示组件，与其它不同需要全局挂载
 Vue.prototype.$confirm = MessageBox.confirm   //messagebox的确认弹框

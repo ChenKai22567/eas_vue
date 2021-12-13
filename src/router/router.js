@@ -8,7 +8,8 @@ import rights from '../components/power/rights.vue'
 import roles from '../components/power/roles.vue'
 import cate from '../components/infos/cate.vue'
 import params from '../components/infos/params.vue'
-import infos from '../components/infos/infos.vue'
+import infolist from '../components/infos/infos_list.vue'
+import add from '../components/infos/add.vue'
 
 Vue.use(VueRouter)
 
@@ -21,10 +22,11 @@ const routes = [
     { path: '/welcome', component: welcome}, 
     { path: '/users', component: users, meta:{ keepAlive: true, comp: users, name: '用户列表'} },
     { path: '/rights', component: rights, meta:{ keepAlive: true, comp: rights, name: '使用权限列表'} },
-    { path: '/roles', component: roles, meta:{ keepAlive: true, comp: users, name: '救助角色列表'} },
-    { path: '/categories', component: cate, meta:{ keepAlive: true, comp: users, name: '救助信息分类'} },
-    { path: '/params', component: params, meta:{ keepAlive: true, comp: users, name: '分类参数设置'} },
-   
+    { path: '/roles', component: roles, meta:{ keepAlive: true, comp: roles, name: '救助角色列表'} },
+    { path: '/categories', component: cate, meta:{ keepAlive: true, comp: cate, name: '救助信息分类'} },
+    { path: '/params', component: params, meta:{ keepAlive: true, comp: params, name: '分类参数设置'} },
+    { path: '/infos', component: infolist, meta:{ keepAlive: true, comp: infolist, name: '救助信息列表'} },
+    { path: '/infos/add', component: add, meta:{ keepAlive: true, comp: add, name: '添加救助信息'} }
   ]
  }
 ]
