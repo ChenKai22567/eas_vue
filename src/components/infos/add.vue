@@ -71,7 +71,7 @@
             </el-form-item>
             <el-form-item label="救助信息分类：" prop="goods_cat">
               <el-cascader
-                expand-trigger="hover"
+               
                 :options="catelist"
                 :props="cateProps"
                 v-model="addForm.goods_cat"
@@ -136,12 +136,17 @@
           </el-tab-pane>
 
           <el-tab-pane label="详细内容" name="4">
-            <!-- 富文本编辑器组件 ql-editor这个类名要在浏览器中富文本编辑器相应的位置中找到 html没有写 -->
+              <el-row  :gutter="20">
+            <el-col :span="19">
+            <!-- 富文本编辑器组件 ql-editor类名查看调试element -->
             <quill-editor v-model="addForm.goods_introduce"></quill-editor>
+            </el-col>
             <!-- 添加商品的按钮 -->
-            <el-button type="primary" class="btnAdd" @click="add"
-              >完成添加当前救助信息</el-button
-            >
+            <el-col :span="5">
+            <el-button type="success" class="btnAdd" @click="add" plain
+              >完成添加救助信息</el-button>
+            </el-col>
+            </el-row>
           </el-tab-pane>
         </el-tabs>
       </el-form>
@@ -156,7 +161,9 @@
 </template>
 
 <script>
-import _ from 'lodash' /* 导入lodash再调用cloneDeep方法 推荐用_接收 类似jquery用$接收 */
+ /*推荐用_接收 类似jquery用$接收 */
+import _ from 'lodash' /* 导入lodash再调用cloneDeep方法*/
+
 
 export default {
   data() {
@@ -173,7 +180,7 @@ export default {
       // 添加救助信息表单数据对象
       addForm: {
         goods_name: '调试默认1',
-        goods_price: 0,
+        goods_price: 1,
         goods_weight: 0,
         goods_state: 2,
         goods_number: 1,
@@ -205,6 +212,8 @@ export default {
       // 救助信息分类列表
       catelist: [],
       cateProps: {
+        //element ui 新用法记住
+        expandTrigger: 'hover',
         /* 级联选择器的配置项 */
         label: 'cat_name',
         value: 'cat_id',
@@ -228,7 +237,7 @@ export default {
     this.getCateList()
   },
   methods: {
-    // 获取所有商品分类数据
+    // 获取所有救助信息分类数据
     async getCateList() {
       const { data: res } = await this.$http.get('categories')
       if (res.meta.status !== 200) {
@@ -296,7 +305,7 @@ export default {
       this.previewPath = file.response.data.url
       this.previewVisible = true
     },
-    // 处理移除图片的操作 on-remove点击叉号触发
+    // 处理移除图片的操作，on-remove点击叉号触发
     handleRemove(file) {
       // console.log(file) 移除的图片的信息 依然有response-> data-> temp_path
       // 1. 获取将要删除的图片的临时路径
@@ -307,7 +316,7 @@ export default {
       this.addForm.pics.splice(i, 1)
       console.log(this.addForm) /* addForm即要发送请求的参数列表 */
     },
-    // 监听图片上传成功 保存文件路径
+    // 监听图片上传成功，保存文件路径
     handleSuccess(response) {
       console.log(response) /* 就是network里显示的信息 */
       // 1. 拼接得到一个图片信息对象
@@ -316,7 +325,7 @@ export default {
       this.addForm.pics.push(picInfo)
       console.log(this.addForm) /* addForm即要发送请求的参数列表 */
     },
-    // 添加商品 发送请求
+    // 添加救助信息，发送请求
     add() {
       // 先进行预验证
       this.$refs.addFormRef.validate(async valid => {
@@ -329,7 +338,6 @@ export default {
         // 导入lodash包（先安装依赖） cloneDeep(obj)
         const form = _.cloneDeep(this.addForm)
         form.goods_cat = form.goods_cat.join(',')
-
         // 2.处理动态参数 即先把存放在数据里的相应数据（attr_vals）改为数组再存放到参数对象里
         this.manyTableData.forEach(item => {
           const newInfo = {
@@ -346,17 +354,14 @@ export default {
         // 把addForm里推进去的attrs复制给新拷贝出来的form 再发送请求
         form.attrs = this.addForm.attrs
         console.log(form)
-
-        // 发起请求添加商品
-        // 商品的名称，必须是唯一的
+        // 发起请求添加救助信息
+        // 信息的名称，必须是唯一的
         const { data: res } = await this.$http.post('goods', form)
-
         if (res.meta.status !== 201) {
           return this.$message.error('添加救助信息失败！')
         }
-
         this.$message.success('添加救助信息成功！')
-        this.$router.push('/goods')
+        this.$router.push('/infos')
       })
     }
   },
@@ -382,7 +387,7 @@ export default {
 }
 
 .btnAdd {
-  margin-top: 15px;
+  margin-top: 80px;
 }
 .el-alert {
   width: 70%;

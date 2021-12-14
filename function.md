@@ -1,9 +1,9 @@
 精简版：
 1.基本设置：
-①hash模式的路由  ②element.js的按需引入【全组件使用（包括部分隐藏组件）】  
-③axios的接口请求  ④树状表插件的引用【已弃用】
-⑤git进行多分支版本管理  ⑥Prettier进行代码格式化
+①hash模式的路由  ②插件：element.js【全组件使用（包括部分隐藏组件）】、 quill editor富文本编辑器、tree-grid树状表插件【已弃用】、lodash
+③axios的接口请求   ⑤git进行多分支版本管理  ⑥Prettier进行代码格式化
 ⑦less进行页面美化  ⑧babel使用es6编码
+
 
 2./login：
 ①输入初始值设置  ②输入后的规则提示

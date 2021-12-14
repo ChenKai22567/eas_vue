@@ -6,6 +6,14 @@ import './plugins/element.js' //导入的element插件
 import './assets/css/global.css'
 //导入树状表插件
 import TreeTable from 'vue-table-with-tree-grid'
+//导入富文本编辑器
+import VueQuillEditor from 'vue-quill-editor'
+// require styles 导入富文本编辑器对应的样式
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+
 
 import axios from 'axios'
 axios.defaults.baseURL = 'http://101.43.37.78:8888/api/private/v1/'
@@ -15,6 +23,11 @@ axios.interceptors.request.use(config =>{
   return config  //固定写法，最后必须return config
 })
 Vue.prototype.$http = axios
+
+
+
+//注册富文本编辑器全局可用
+Vue.use(VueQuillEditor)
 
 Vue.config.productionTip = false
 //注册树状表插件
