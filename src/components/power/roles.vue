@@ -51,7 +51,8 @@
       :data="rolelist" border stripe 
       height="383px"
         :row-style="{ height: '23px' }"
-        :cell-style="{ padding: '7px' }">
+        :cell-style="{ padding: '7px' }"
+        row-key="id">
 
         <!-- 展开列 -->
         <el-table-column type="expand" label="展开" width="50px">
