@@ -1,17 +1,42 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import login from '../components/login.vue' //导入路由
-import home from '../components/home.vue' 
-import welcome from '../components/welcome.vue' 
-import users from '../components/users/users.vue' 
-import rights from '../components/power/rights.vue'
-import roles from '../components/power/roles.vue'
-import cate from '../components/infos/cate.vue'
-import params from '../components/infos/params.vue'
-import infolist from '../components/infos/infos_list.vue'
-import add from '../components/infos/add.vue'
-import process from '../components/process/process.vue'
-import report from '../components/report/report.vue'
+//import login from '../components/login.vue' //导入路由
+//import home from '../components/home.vue' 
+//import welcome from '../components/welcome.vue' 
+
+// 路由懒加载：分组名称一样则会打包到同一个js文件，其中一个组件加载了其他的也会加载
+const login = () => import(/* webpackChunkName: "login_home_welcome" */ '../components/login.vue')
+const home = () => import(/* webpackChunkName: "login_home_welcome" */ '../components/home.vue')
+const welcome = () => import(/* webpackChunkName: "login_home_welcome" */ '../components/welcome.vue')
+
+//import users from '../components/users/users.vue' 
+//import rights from '../components/power/rights.vue'
+//import roles from '../components/power/roles.vue'
+
+const users = () => import(/* webpackChunkName: "Users_Rights_Roles" */ '../components/users/users.vue')
+const rights = () => import(/* webpackChunkName: "Users_Rights_Roles" */ '../components/power/rights.vue')
+const roles = () => import(/* webpackChunkName: "Users_Rights_Roles" */ '../components/power/roles.vue')
+
+//import cate from '../components/infos/cate.vue'
+//import params from '../components/infos/params.vue'
+
+const cate = () => import(/* webpackChunkName: "Cate_Params" */ '../components/infos/cate.vue')
+const params = () => import(/* webpackChunkName: "Cate_Params" */ '../components/infos/params.vue')
+
+//import infolist from '../components/infos/infos_list.vue'
+//import add from '../components/infos/add.vue'
+
+const infolist = () => import(/* webpackChunkName: "infoList_Add" */ '../components/infos/infos_list.vue')
+const add = () => import(/* webpackChunkName: "infoList_Add" */ '../components/infos/add.vue')
+
+//import process from '../components/process/process.vue'
+//import report from '../components/report/report.vue'
+
+const process = () => import(/* webpackChunkName: "Process_Report" */ '../components/process/process.vue')
+const report = () => import(/* webpackChunkName: "Process_Report" */ '../components/report/report.vue')
+
+
+
 
 Vue.use(VueRouter)
 
