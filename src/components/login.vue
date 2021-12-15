@@ -55,6 +55,7 @@
 
 <script>
 import { GVerify } from './verifyCode';
+
 // 行为区
 export default {
   data() {

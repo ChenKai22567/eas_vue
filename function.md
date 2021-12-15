@@ -1,8 +1,9 @@
 精简版：
 1.基本设置：
-①hash模式的路由  ②插件：element.js【全组件使用（包括部分隐藏组件）】、 quill editor富文本编辑器、tree-grid树状表插件【已弃用】、lodash
+①hash模式的路由  ②插件：element.js【全组件使用（包括部分隐藏组件）】、 quill editor富文本编辑器、tree-grid树状表插件【已弃用】、lodash深拷贝、Nprogress进度条
 ③axios的接口请求   ⑤git进行多分支版本管理  ⑥Prettier进行代码格式化
 ⑦less进行页面美化  ⑧babel使用es6编码
+
 
 
 2./login：
@@ -10,6 +11,10 @@
 ③发起登录请求前的规则预验证  ④路由导航守卫
 
 3./users：
+
+4.项目优化：
+①生成打包报告   ②第三方库启用CDN  ③路由懒加载
+④首页内容定制  ⑤element ui组件按需加载
 
 
 

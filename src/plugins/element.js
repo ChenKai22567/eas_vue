@@ -51,7 +51,9 @@ import {
   Progress,
   CheckboxGroup,
   Checkbox,
-  Upload
+  Upload,
+  Timeline,
+  TimelineItem
 } from 'element-ui'
 
 Vue.use(Button)
@@ -104,5 +106,7 @@ Vue.use(Progress)
 Vue.use(CheckboxGroup)
 Vue.use(Checkbox)
 Vue.use(Upload)
+Vue.use(Timeline)
+Vue.use(TimelineItem)
 Vue.prototype.$message = Message   //弹框提示组件，与其它不同需要全局挂载
 Vue.prototype.$confirm = MessageBox.confirm   //messagebox的确认弹框

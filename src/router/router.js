@@ -10,6 +10,8 @@ import cate from '../components/infos/cate.vue'
 import params from '../components/infos/params.vue'
 import infolist from '../components/infos/infos_list.vue'
 import add from '../components/infos/add.vue'
+import process from '../components/process/process.vue'
+import report from '../components/report/report.vue'
 
 Vue.use(VueRouter)
 
@@ -26,7 +28,9 @@ const routes = [
     { path: '/categories', component: cate, meta:{ keepAlive: true, comp: cate, name: '救助信息分类'} },
     { path: '/params', component: params, meta:{ keepAlive: true, comp: params, name: '分类参数设置'} },
     { path: '/infos', component: infolist, meta:{ keepAlive: true, comp: infolist, name: '救助信息列表'} },
-    { path: '/infos/add', component: add, meta:{ keepAlive: true, comp: add, name: '添加救助信息'} }
+    { path: '/infos/add', component: add, meta:{ keepAlive: true, comp: add, name: '添加救助信息'} },
+    { path: '/process', component: process, meta:{ keepAlive: true, comp: process, name: '救助执行情况'} },
+    { path: '/reports', component: report, meta:{ keepAlive: true, comp: report, name: '救助信息统计'} }
   ]
  }
 ]

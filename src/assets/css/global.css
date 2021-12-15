@@ -34,3 +34,6 @@ html,body, #app{
     min-height: 180px;
     max-height: 200px;
 }
+.el-cascader-menu {
+    max-height: 300px;
+}
