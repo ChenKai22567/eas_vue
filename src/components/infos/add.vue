@@ -8,7 +8,7 @@
             type="warning"
             show-icon
             close-text="知道了，退下吧"
-            description="请务必按照提示按步骤进行操作"
+            description="（标题必须唯一，分类必选三级）请务必按照提示按步骤进行操作"
           >
           </el-alert>
           <el-steps

@@ -4,7 +4,7 @@
       <el-col :span="5">
         <el-card align="middle" class="card_left">
           <el-row>
-            <el-col :span="16">
+            <el-col :span="16" class="span">
               批量操作区域:
             </el-col>
           </el-row>
@@ -23,18 +23,6 @@
           <el-row>
             <el-col :span="24">
               <el-button
-                type="danger"
-                @click="removeUserAll()"
-                icon="el-icon-close"
-                plain
-                >批量删除</el-button
-              >
-              <!-- 点击这个按钮 对话框显示出来 -->
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <el-button
                 icon="el-icon-refresh"
                 @click="getCateList()"
                 type="info"
@@ -45,7 +33,7 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-empty description="此处为可视化"></el-empty>
+            <el-empty description="我引以为傲的操作逻辑"></el-empty>
           </el-row>
         </el-card>
       </el-col>
@@ -614,5 +602,11 @@ export default {
 }
 .el-cascader {
   width: 40%;
+}
+.span{
+  margin-bottom: 25px;
+}
+.el-empty{
+  margin-top: -20px;
 }
 </style>

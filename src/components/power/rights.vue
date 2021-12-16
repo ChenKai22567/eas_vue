@@ -7,7 +7,7 @@
       <el-col :span="5">
     <el-card align="middle" class="card_left">
       <el-row>
-        <el-col :span="16">
+        <el-col :span="16" class="span">
         批量操作区域:
         </el-col>
       </el-row>
@@ -32,7 +32,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-empty description="此处为可视化"></el-empty>
+        <el-empty description="表头固定与筛选"></el-empty>
       </el-row>
     </el-card>
       </el-col>
@@ -50,8 +50,8 @@
       :cell-style="{padding:'7px'}" ref="levelRef" height="383px"
       highlight-current-row @current-change="handleCurrentChange">
         <el-table-column label="#" type="index" width="60"></el-table-column>  <!--注意列宽的设置方法-->
-        <el-table-column label="所有权限名称" prop="authName"></el-table-column>
-        <el-table-column label="用户权限路径" prop="path" :formatter="formatter"></el-table-column>
+        <el-table-column label="所有权限名称" sortable prop="authName"></el-table-column>
+        <el-table-column label="用户权限路径" sortable prop="path" :formatter="formatter"></el-table-column>
         <el-table-column label="权限等级" prop="level" 
         :filters="[{ text: '一级权限', value: '0' }, { text: '二级权限', value: '1' }, { text: '三级权限', value: '2' }]"
       :filter-method="filterTag"
@@ -140,5 +140,11 @@ export default {
   }
 .card_left{
   height: 465px;
+}
+.span{
+  margin-bottom: 20px;
+}
+.el-empty{
+  margin-top: -20px;
 }
 </style>

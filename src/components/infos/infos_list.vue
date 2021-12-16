@@ -5,7 +5,7 @@
       <el-col :span="5">
         <el-card align="middle" class="card_left">
           <el-row>
-            <el-col :span="16">
+            <el-col :span="16" class="span">
               批量操作区域:
             </el-col>
           </el-row>
@@ -540,5 +540,11 @@ body {
 }
 .el-form-item{
     margin-bottom: 7px;
+}
+.span{
+  margin-bottom: 10px;
+}
+.el-empty{
+  margin-top: -20px;
 }
 </style>

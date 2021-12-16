@@ -4,7 +4,7 @@
       <el-col :span="5">
     <el-card align="middle" class="card_left">
       <el-row>
-        <el-col :span="16">
+        <el-col :span="16" class="span">
         批量操作区域:
         </el-col>
       </el-row>
@@ -29,7 +29,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-empty description="此处为可视化"></el-empty>
+        <el-empty description="表格左侧有下拉框"></el-empty>
       </el-row>
     </el-card>
       </el-col>
@@ -52,10 +52,10 @@
       height="383px"
         :row-style="{ height: '23px' }"
         :cell-style="{ padding: '7px' }"
-        row-key="id">
+        :row-key="id">
 
         <!-- 展开列 -->
-        <el-table-column type="expand" label="展开" width="50px">
+        <el-table-column type="expand" label="展开" width="55px">
           <template v-slot="tree">
             <!-- layout 栅格 渲染一级权限 5+19总共24列 -->
             <!--v-for循环需要绑定key值-->
@@ -86,9 +86,9 @@
         </el-table-column>
 
         <!-- 索引列 -->
-        <el-table-column type="index" label="No."></el-table-column>
-        <el-table-column label="角色名称" prop="roleName" plain></el-table-column>
-        <el-table-column label="角色描述" prop="roleDesc"></el-table-column>
+        <el-table-column type="index" label="No." width="55"></el-table-column>
+        <el-table-column label="角色名称" sortable prop="roleName" width="140"></el-table-column>
+        <el-table-column label="角色描述" prop="roleDesc" width="230"></el-table-column>
         <el-table-column label="操作" width="300px">
           <template v-slot="edit">
             <el-button size="mini" type="primary" 
@@ -173,7 +173,7 @@
         <el-form-item label="角色名称：" prop="roleName">
           <el-input v-model="editForm.roleName"></el-input>
         </el-form-item>
-        <el-form-item label="角色描述：" prop="roleDesc">
+        <el-form-item label="角色描述：" prop="roleDesc" >
           <el-input  type="textarea" :autosize="{ minRows: 1, maxRows: 4}"
           v-model="editForm.roleDesc" placeholder="请在此处输入角色描述"></el-input>
         </el-form-item>
@@ -439,5 +439,11 @@ export default {
   }
 .card_left{
   height: 465px;
+}
+.span{
+  margin-bottom: 20px;
+}
+.el-empty{
+  margin-top: -20px;
 }
 </style>

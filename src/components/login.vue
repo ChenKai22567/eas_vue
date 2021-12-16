@@ -19,7 +19,7 @@
       >
         <!--先用：model绑定数据对象到form上-->
         
-      <el-form-item prop="username" label="账 号：" label-width="60px">
+      <el-form-item prop="username" label="账 号：" label-width="62px">
           <!-- rules在表单中存放规则（直接在data新建一个对象即可），item中用prop调用rules存放的对应规则 -->
           <el-input
             v-model="loginForm.username"
@@ -27,7 +27,7 @@
           ></el-input>
           <!--再用v-model绑定到数据对象具体属性中-->
         </el-form-item>
-        <el-form-item prop="password" label="密 码：" label-width="60px">
+        <el-form-item prop="password" label="密 码：" label-width="62px">
           <el-input
             v-model="loginForm.password"
             prefix-icon="el-icon-lock"
@@ -64,7 +64,7 @@ export default {
       loginForm: {
         username: 'admin' ,/* 后面登录就不用再输 */
         password: '123456',
-        verifyCode: '后门'
+        verifyCode: '浅仓唯'
       },
       // 这是表单的验证规则对象
       loginFormRules: {
@@ -124,7 +124,7 @@ export default {
 
 <style lang="less" scoped>
 .login_container {
-  background:url('../assets/蓝色.png') no-repeat center;
+  background:url('../assets/back.png') no-repeat center;
   height: 100%;
   background-size: 100% 100%;
   background-position: center 0;

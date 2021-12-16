@@ -6,7 +6,7 @@
       <el-col :span="5">
     <el-card align="middle" class="card_left">
       <el-row>
-        <el-col :span="16">
+        <el-col :span="16" class="span">
         批量操作区域:
         </el-col>
       </el-row>
@@ -499,5 +499,11 @@ export default {
   }
 .card_left{
   height: 465px;
+}
+.span{
+  margin-bottom: 15px;
+}
+.el-empty{
+  margin-top: -20px;
 }
 </style>

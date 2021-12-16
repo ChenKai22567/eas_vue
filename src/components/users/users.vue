@@ -5,7 +5,7 @@
       <el-col :span="5">
     <el-card align="middle" class="card_left">
       <el-row>
-        <el-col :span="16">
+        <el-col :span="16" class="span">
         批量操作区域:
         </el-col>
       </el-row>
@@ -39,7 +39,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-empty description="此处为可视化"></el-empty>
+        <el-empty description="表格左右两列固定"></el-empty>
       </el-row>
     </el-card>
       </el-col>
@@ -82,11 +82,11 @@
         </el-table-column>
         <el-table-column label="#" type="index" width="50"></el-table-column>
         <!-- column索引列 只要加上type="index" -->
-        <el-table-column label="姓名" prop="username" width="130"></el-table-column>
-        <el-table-column label="邮箱" prop="email" width="200"></el-table-column>
-        <el-table-column label="电话" prop="mobile" width="180"></el-table-column>
-        <el-table-column label="角色" prop="role_name" width="130"></el-table-column>
-        <el-table-column label="状态" width="180"
+        <el-table-column label="姓名" prop="username" sortable width="130"></el-table-column>
+        <el-table-column label="邮箱" prop="email" sortable width="200"></el-table-column>
+        <el-table-column label="电话" prop="mobile" sortable width="180"></el-table-column>
+        <el-table-column label="角色" prop="role_name" sortable width="130"></el-table-column>
+        <el-table-column label="状态" width="180" sortable
           ><!--作用域插槽覆盖prop-->
           <!--2.6将slot slot-cope弃用，完整的插槽需要template-->
           <!--作用域插槽 v-slot="scope" scope.row从userlist里获取的本行所有数据-->
@@ -590,5 +590,11 @@ body {
   }
 .card_left{
   height: 465px;
+}
+.span{
+  margin-bottom: 10px;
+}
+.el-empty{
+  margin-top: -20px;
 }
 </style>

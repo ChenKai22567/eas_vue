@@ -4,7 +4,7 @@
       <el-col :span="5">
         <el-card align="middle" class="card_left">
           <el-row>
-            <el-col :span="18">
+            <el-col :span="18" class="span">
               查看与操作区域:
             </el-col>
           </el-row>
@@ -303,5 +303,11 @@ body {
   }
 .el-pagination {
   padding: 15px 0px 0px 0px;
+}
+.span{
+  margin-bottom: 15px;
+}
+.el-empty{
+  margin-top: -20px;
 }
 </style>
