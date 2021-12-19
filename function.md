@@ -5,9 +5,7 @@
 1.基本设置：
 ①vue2.6.11    ①vue-cli项目搭建     ①vue-router：使用hash模式的路由#
 ②主要插件：element.js组件、 quill editor富文本编辑器、tree-grid树状表插件【已弃用】、lodash深拷贝、Nprogress进度条、echarts简单使用
-③axios封装的Ajax异步处理   
-⑤git与bcompare进行多分支版本管理  ⑥Prettier进行代码格式化设置
-⑦less语言页面美化  ⑧babel编译器
+③axios封装的Ajax异步处理  ⑤git与bcompare进行多分支版本管理  ⑥Prettier进行代码格式化设置⑦less语言页面美化  ⑧babel编译器
 ⑩postman接口测试
 ⑨external加载外部cdn资源
 
