@@ -1,8 +1,8 @@
 <template>
   <div>
     <!-- 卡片视图区域 -->
-    <el-row :gutter="15">
-      <el-col :span="5">
+    <el-row :gutter="15" class="workspace-row">
+      <el-col :span="5" class="action-column">
         <el-card align="middle" class="card_left">
           <el-row>
             <el-col :span="16" class="span">
@@ -62,7 +62,7 @@
           </el-row>
         </el-card>
       </el-col>
-      <el-col :span="19">
+      <el-col :span="19" class="data-column">
         <el-card>
           <!-- layout栅格组件 row行 col列 span是宽度（共24） gutter是间隙（合适即可） -->
           <el-row :gutter="130">
@@ -94,7 +94,7 @@
             row-key="good_id"
             @selection-change="handleSelectionChange"
             ref="stateRef"
-            height="320px"
+            :height="adaptiveTableHeight"
           >
             <!-- 跟menu一样 把要展示的数据存储到table自带的属性data里面 下面再用prop取对应的数据 和v-model双向绑定 -->
             <el-table-column
@@ -113,13 +113,13 @@
             <el-table-column
               label="标题信息"
               prop="goods_name"
-              width="200"
+              min-width="200"
             ></el-table-column>
             <el-table-column label="优先等级" prop="goods_number"
-              sortable width="160">
+              sortable min-width="160">
               <template v-slot="line">
-              <el-rate v-model="line.row.goods_number" 
-              disabled :colors="colors" > 
+              <el-rate v-model="line.row.goods_number"
+              disabled :colors="colors" >
                 </el-rate>
                 </template>
                 </el-table-column>
@@ -127,12 +127,12 @@
               label="关注人数"
               prop="goods_price"
               sortable
-              width="120"
+              min-width="120"
             ></el-table-column>
             <el-table-column
               label="救助状态"
               prop="goods_state"
-              width="135"
+              min-width="135"
               :filters="[
                 { text: '救助完成', value: '0' },
                 { text: '正在救助', value: '1' },
@@ -153,13 +153,13 @@
                 <el-tag type="danger" v-else>等待救助</el-tag>
               </template></el-table-column
             >
-            <el-table-column sortable label="发布时间" prop="add_time" width="180">
+            <el-table-column sortable label="发布时间" prop="add_time" min-width="180">
               <template v-slot="time">
                 {{ time.row.add_time | dateFormat }}
                 <!-- 全局时间过滤器 将时间以年月日的形式展示（原为毫秒）-->
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="200" fixed="right">
+            <el-table-column label="操作" min-width="200" fixed="right">
               <template v-slot="info">
                 <el-button
                   type="primary"
@@ -184,7 +184,7 @@
               placement="top"
               :enterable="false"
             >
-             
+
               <el-button
                 type="warning"
                 icon="el-icon-setting"
@@ -234,8 +234,8 @@
           <el-input v-model="editForm.goods_name"></el-input>
         </el-form-item>
         <el-form-item label="优先等级：" prop="email">
-          <el-rate v-model="editForm.goods_number" 
-          class="level" :colors="colors"> 
+          <el-rate v-model="editForm.goods_number"
+          class="level" :colors="colors">
                 </el-rate>
         </el-form-item>
         <el-form-item label="救助状态：" prop="email">
@@ -267,11 +267,14 @@
 </template>
 
 <script>
+import { createAdaptiveTable } from '../../mixins/adaptiveTable.js'
+
 export default {
-  data() {
+  mixins: [createAdaptiveTable(325, 160)],
+  data () {
     return {
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'], // 等同于 { 2: '#99A9BF', 4: { value: '#F7BA2A', excluded: true }, 5: '#FF9900' }
-      //多选数量
+      // 多选数量
       multipleSelection: [],
       // 查询参数对象
       queryInfo: {
@@ -280,7 +283,7 @@ export default {
         pagesize: 6
       },
       infolist: [] /* 返回的数据存储到这里 */,
-      total: 0 /*总数据条数*/,
+      total: 0 /* 总数据条数 */,
       // 控制编辑救助信息对话框的显示
       editDialogVisible: false,
       // 查询到的救助信息对象
@@ -292,7 +295,7 @@ export default {
         ],
         state: [{ required: true, message: '请选择救助状态', trigger: 'blur' }]
       },
-       // 控制分配角色对话框的显示与隐藏
+      // 控制分配角色对话框的显示与隐藏
       setCateDialogVisible: false,
       // 需要被分配角色的用户信息
       infoInfo: {},
@@ -300,17 +303,17 @@ export default {
       rolesList: [],
       // 已选中的角色Id值
       selectedRoleId: '',
-      //加载动画
+      // 加载动画
       loading: true
     }
   },
-  created() {
+  created () {
     this.getInfoList()
   },
   methods: {
     // 根据分页获取对应的商品列表
-    async getInfoList() {
-      //控制加载动画
+    async getInfoList () {
+      // 控制加载动画
       this.loading = true
       const { data: res } = await this.$http.get('goods', {
         params: this.queryInfo
@@ -319,31 +322,29 @@ export default {
         return this.$message.error('获取救助信息列表失败！')
       }
       this.$message.success('获取救助信息列表成功！')
-      console.log(res.data)
       this.infolist = res.data.goods
       this.total = res.data.total
       this.loading = false
     },
     // 监听 下拉页码 改变的事件 newsize为选择的条数 选择了几条就把这个作为参数传给数据请求中重新请求
-    handleSizeChange(newSize) {
+    handleSizeChange (newSize) {
       // console.log(newSize)
       this.queryInfo.pagesize = newSize
       this.getInfoList()
     },
     // 监听 页码值 改变的事件 newPage为选择的页码值 选择了第几页就把这个页码作为参数传给数据请求中重新请求
-    handleCurrentChange(newPage) {
-      console.log(newPage)
+    handleCurrentChange (newPage) {
       this.queryInfo.pagenum = newPage
       this.getInfoList()
     },
     // 点击添加,跳转到新页面
-    goAddpage() {
+    goAddpage () {
       this.$router.push('/infos/add')
     },
     // 展示编辑用户的对话框
-    async showEditDialog(id) {
+    async showEditDialog (id) {
       const { data: res } = await this.$http.get('goods/' + id)
-      //解构赋值语法勿忘
+      // 解构赋值语法勿忘
       if (res.meta.status !== 200) {
         return this.$message.error('查询救助信息条目失败！')
       }
@@ -353,14 +354,13 @@ export default {
       this.editDialogVisible = true
     },
     // 监听修改用户对话框,关闭时重置
-    editDialogClosed() {
+    editDialogClosed () {
       this.$refs.editFormRef.resetFields()
     },
     // 点击确定进行预验证 并提交数据
-    editUserInfo() {
+    editUserInfo () {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return
-        console.log(this.editForm)
         // 发起修改用户信息的数据请求
         const { data: res } = await this.$http.put('goods/' + this.editForm.goods_id,
           {
@@ -370,7 +370,7 @@ export default {
             goods_weight: this.editForm.goods_weight,
             goods_introduce: this.editForm.goods_introduce,
             goods_cat: this.editForm.goods_cat,
-            goods_state: this.editForm.goods_state,
+            goods_state: this.editForm.goods_state
           }
         )
         if (res.meta.status !== 200) {
@@ -385,18 +385,18 @@ export default {
       })
     },
     // 根据Id删除对应的救助信息
-    async removeInfoById(id) {
+    async removeInfoById (id) {
       // 弹框询问用户是否删除数据（参见element）
       const confirmResult = await this.$confirm(
         /* 先给vue挂载了$confirm函数 里面的参数代表弹框显示的内容样式 函数的返回值是promise 所以可以用asyc和await来优化 这样返回的值即confirmResult就是一个字符串了（之前的是一个数据）如果确定就是confirm 取消就是cancle 由catch捕获 */
         '  将永久删除该救助信息，请选择是否确认？',
         '删除救助信息条目',
         {
-          //因为$confirm返回promise所有可以使用await优化
+          // 因为$confirm返回promise所有可以使用await优化
           confirmButtonText: '确 定',
           cancelButtonText: '取 消',
           type: 'warning'
-          //center: true  //文字居中
+          // center: true  //文字居中
         }
       ).catch(
         err => err
@@ -415,22 +415,22 @@ export default {
       this.$message.success('删除救助信息操作成功！')
       this.getInfoList()
     },
-    //操作多选
-    handleSelectionChange(val) {
+    // 操作多选
+    handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    async removeInfoAll(id) {
+    async removeInfoAll (id) {
       // 弹框询问用户是否删除数据（参见element）
       const confirmResult = await this.$confirm(
         /* 先给vue挂载了$confirm函数 里面的参数代表弹框显示的内容样式 函数的返回值是promise 所以可以用asyc和await来优化 这样返回的值即confirmResult就是一个字符串了（之前的是一个数据）如果确定就是confirm 取消就是cancle 由catch捕获 */
         '  此操作将永久删除所有选中救助信息，是否确认？',
         '批量删除操作',
         {
-          //因为$confirm返回promise所有可以使用await优化
+          // 因为$confirm返回promise所有可以使用await优化
           confirmButtonText: '确 定',
           cancelButtonText: '取 消',
           type: 'warning'
-          //center: true  //文字居中
+          // center: true  //文字居中
         }
       ).catch(err => err)
       if (confirmResult !== 'confirm') {
@@ -449,21 +449,21 @@ export default {
       this.getInfoList()
     },
 
-    //清除过滤器
-    clearFilter() {
+    // 清除过滤器
+    clearFilter () {
       this.$refs.stateRef.clearFilter()
     },
-    //过滤器的判断（筛选函数）（value为选中值）
-    filterTag(value, row) {
-      return row.goods_state == value
+    // 过滤器的判断（筛选函数）（value为选中值）
+    filterTag (value, row) {
+      return String(row.goods_state) === String(value)
     },
-    //过滤器的输出
-    filterHandler(value, row, column) {
-      const property = column['property']
+    // 过滤器的输出
+    filterHandler (value, row, column) {
+      const property = column.property
       return row[property] === value
     },
     // 展示分配角色的对话框
-    async setRole(userInfo) {
+    async setRole (userInfo) {
       this.userInfo = userInfo
 
       // 在展示对话框之前，先获取所有的角色列表并存储起来
@@ -473,16 +473,16 @@ export default {
       }
       this.catesList = res.data
       this.setCateDialogVisible = true
-    },    
-      // 点击确定，分配角色
-    async saveCateInfo() {
+    },
+    // 点击确定，分配角色
+    async saveCateInfo () {
       // 如果还没选择新的角色
       if (!this.selectedRoleId) {
         return this.$message.error('请选择要分配的角色！')
       }
       const { data: res } = await this.$http.put(
-        'users/'+this.userInfo.id+'/role',
-        {rid: this.selectedRoleId}
+        'users/' + this.userInfo.id + '/role',
+        { rid: this.selectedRoleId }
       )
       if (res.meta.status !== 200) {
         return this.$message.error('分配用户角色失败！')
@@ -492,7 +492,7 @@ export default {
       this.setCateDialogVisible = false
     },
     // 监听关闭分配角色的对话框，清空选项
-    setRoleDialogClosed() {
+    setRoleDialogClosed () {
       this.selectedRoleId = ''
       this.infoInfo = {}
     }

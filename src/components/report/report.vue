@@ -16,7 +16,9 @@ import * as echarts from 'echarts'
 export default {
   data() {
     return {
-
+      chart: null,
+      resizeObserver: null,
+      clockTimer: null
     }
   },
   created() {},
@@ -25,6 +27,11 @@ export default {
 
 var chartDom = document.getElementById('main');
 var myChart = echarts.init(chartDom);
+this.chart = myChart;
+this.resizeObserver = new ResizeObserver(function () {
+  myChart.resize();
+});
+this.resizeObserver.observe(chartDom);
 var option;
 
 option = {
@@ -218,7 +225,7 @@ option = {
     }
   ]
 };
-setInterval(function () {
+this.clockTimer = setInterval(function () {
   var date = new Date();
   var second = date.getSeconds();
   var minute = date.getMinutes() + second / 60;
@@ -248,15 +255,25 @@ setInterval(function () {
 option && myChart.setOption(option);
 
   },
+  beforeDestroy() {
+    if (this.clockTimer) clearInterval(this.clockTimer);
+    if (this.resizeObserver) this.resizeObserver.disconnect();
+    if (this.chart) this.chart.dispose();
+  },
   methods: {}
 }
 </script>
 
 <style lang="less" scoped>
 #main{
-    transform: translate(40%,-10%);
+    width: min(550px, 100%) !important;
+    height: min(550px, max(260px, calc(100dvh - 224px))) !important;
+    margin: 0 auto;
+    transform: none;
 }
 .card{
-    max-height: 470px;
+    height: max(300px, calc(100dvh - 184px));
+    min-height: 0;
+    overflow: hidden;
 }
 </style>

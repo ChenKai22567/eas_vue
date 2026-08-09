@@ -1,0 +1,26 @@
+[Unit]
+Description=EasVue API service
+After=network-online.target
+Wants=network-online.target
+RequiresMountsFor=/www/wwwroot/easvue.624work.club/shared
+
+[Service]
+Type=simple
+User=easvue
+Group=easvue
+WorkingDirectory=/www/wwwroot/easvue.624work.club/current/server
+EnvironmentFile=/www/wwwroot/easvue.624work.club/shared/easvue.env
+ExecStart=/opt/easvue/node-v24.18.1/bin/node dist/index.js
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=20s
+KillSignal=SIGTERM
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/www/wwwroot/easvue.624work.club/shared
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

@@ -3,8 +3,8 @@
     <!-- 面包屑导航区域 -->
 
     <!-- 卡片视图 -->
-    <el-row :gutter="15">
-      <el-col :span="5">
+    <el-row :gutter="15" class="workspace-row">
+      <el-col :span="5" class="action-column">
     <el-card align="middle" class="card_left">
       <el-row>
         <el-col :span="16" class="span">
@@ -13,8 +13,8 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-button type="primary" 
-          @click="clearFilter" 
+          <el-button type="primary"
+          @click="clearFilter"
           icon="el-icon-close"
           plain
             >清除过滤器</el-button
@@ -36,23 +36,23 @@
       </el-row>
     </el-card>
       </el-col>
-        <el-col :span="19">
+        <el-col :span="19" class="data-column">
     <el-card >
       <el-row>
         <el-col>
           数据展示区域：
         </el-col>
       </el-row>
-      <el-table 
+      <el-table
       v-loading="loading"
       element-loading-text="正在向服务器请求数据"
-      :data="rightsList" border stripe :row-style="{height:'20px'}" 
-      :cell-style="{padding:'7px'}" ref="levelRef" height="383px"
+      :data="rightsList" border stripe :row-style="{height:'20px'}"
+      :cell-style="{padding:'7px'}" ref="levelRef" :height="adaptiveTableHeight"
       highlight-current-row @current-change="handleCurrentChange">
         <el-table-column label="#" type="index" width="60"></el-table-column>  <!--注意列宽的设置方法-->
         <el-table-column label="所有权限名称" sortable prop="authName"></el-table-column>
         <el-table-column label="用户权限路径" sortable prop="path" :formatter="formatter"></el-table-column>
-        <el-table-column label="权限等级" prop="level" 
+        <el-table-column label="权限等级" prop="level"
         :filters="[{ text: '一级权限', value: '0' }, { text: '二级权限', value: '1' }, { text: '三级权限', value: '2' }]"
       :filter-method="filterTag"
       filter-placement="bottom-end">  <!--placement显示筛选结果的位置-->
@@ -72,22 +72,25 @@
 </template>
 
 <script>
+import { createAdaptiveTable } from '../../mixins/adaptiveTable.js'
+
 export default {
-  data() {
+  mixins: [createAdaptiveTable(270, 180)],
+  data () {
     return {
-       //加载动画
+      // 加载动画
       loading: true,
       // 权限列表
       rightsList: []
     }
   },
-  created() {
+  created () {
     // 获取所有的权限
     this.getRightsList()
   },
   methods: {
     // 获取权限列表
-    async getRightsList() {
+    async getRightsList () {
       this.loading = true
       const { data: res } = await this.$http.get('rights/list')
       if (res.meta.status !== 200) {
@@ -95,30 +98,30 @@ export default {
       }
       this.rightsList = res.data
       this.$message.success('获取权限列表数据成功！')
-        //挂载到自己的对象里
-      //console.log(this.rightsList)
+      // 挂载到自己的对象里
+      // console.log(this.rightsList)
       this.loading = false
     },
-    //清除过滤器
-     clearFilter() {
-        this.$refs.levelRef.clearFilter();
+    // 清除过滤器
+    clearFilter () {
+      this.$refs.levelRef.clearFilter()
     },
-    //过滤器的判断（筛选函数）（value为选中值）
-    filterTag(value, row) {
-        return row.level === value;
-      },
-    //过滤器的输出
-    filterHandler(value, row, column) {
-        const property = column['property'];
-        return row[property] === value;
-      },
-    //数据的格式化（修改数据的内容）
-     formatter(row, column) {
-        return row.path;
-      },
-      //选中某行的函数
-    handleCurrentChange(val) {
-        this.currentRow = val;
+    // 过滤器的判断（筛选函数）（value为选中值）
+    filterTag (value, row) {
+      return row.level === value
+    },
+    // 过滤器的输出
+    filterHandler (value, row, column) {
+      const property = column.property
+      return row[property] === value
+    },
+    // 数据的格式化（修改数据的内容）
+    formatter (row, column) {
+      return row.path
+    },
+    // 选中某行的函数
+    handleCurrentChange (val) {
+      this.currentRow = val
     }
   }
 }

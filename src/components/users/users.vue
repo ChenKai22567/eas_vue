@@ -1,8 +1,8 @@
 <template>
   <div>
     <!-- 卡片视图区域 -->
-    <el-row :gutter="15">
-      <el-col :span="5">
+    <el-row :gutter="15" class="workspace-row">
+      <el-col :span="5" class="action-column">
     <el-card align="middle" class="card_left">
       <el-row>
         <el-col :span="16" class="span">
@@ -11,7 +11,7 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-button type="primary" 
+          <el-button type="primary"
           @click="addDialogVisible = true"
           icon="el-icon-plus"
           plain
@@ -22,7 +22,7 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-button type="danger" 
+          <el-button type="danger"
           @click="removeUserAll()"
           icon="el-icon-close"
           plain>批量删除</el-button>
@@ -43,7 +43,7 @@
       </el-row>
     </el-card>
       </el-col>
-        <el-col :span="19">
+        <el-col :span="19" class="data-column">
     <el-card>
       <!-- layout栅格组件 row行 col列 span是宽度（共24） gutter是间隙（合适即可） -->
       <el-row :gutter="130">
@@ -62,7 +62,7 @@
             ></el-button>
           </el-input>
         </el-col>
-        
+
       </el-row>
       <!-- 用户列表区域 -->
       <el-table
@@ -75,18 +75,18 @@
         :cell-style="{ padding: '7px' }"
         row-key="id"
         @selection-change="handleSelectionChange"
-        height="320px"
+        :height="adaptiveTableHeight"
       >
         <!-- 跟menu一样 把要展示的数据存储到table自带的属性data里面 下面再用prop取对应的数据 和v-model双向绑定 -->
         <el-table-column type="selection" width="55" :reserve-selection="true" fixed>
         </el-table-column>
         <el-table-column label="#" type="index" width="50"></el-table-column>
         <!-- column索引列 只要加上type="index" -->
-        <el-table-column label="姓名" prop="username" sortable width="130"></el-table-column>
-        <el-table-column label="邮箱" prop="email" sortable width="200"></el-table-column>
-        <el-table-column label="电话" prop="mobile" sortable width="180"></el-table-column>
-        <el-table-column label="角色" prop="role_name" sortable width="130"></el-table-column>
-        <el-table-column label="状态" width="180" sortable
+        <el-table-column label="姓名" prop="username" sortable min-width="130"></el-table-column>
+        <el-table-column label="邮箱" prop="email" sortable min-width="200"></el-table-column>
+        <el-table-column label="电话" prop="mobile" sortable min-width="180"></el-table-column>
+        <el-table-column label="角色" prop="role_name" sortable min-width="130"></el-table-column>
+        <el-table-column label="状态" min-width="180" sortable
           ><!--作用域插槽覆盖prop-->
           <!--2.6将slot slot-cope弃用，完整的插槽需要template-->
           <!--作用域插槽 v-slot="scope" scope.row从userlist里获取的本行所有数据-->
@@ -101,7 +101,7 @@
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="190" fixed="right">
+        <el-table-column label="操作" min-width="190" fixed="right">
           <template v-slot="line">
             <!-- 作用域插槽 -->
             <!-- 修改按钮 -->
@@ -232,7 +232,7 @@
         <el-form-item class="allot-item">当前的角色：{{userInfo.role_name}}</el-form-item>
         <el-form-item class="allot-item">分配新角色：
           <el-select v-model="selectedRoleId" placeholder="请选择角色">
-            <el-option v-for="item in rolesList" :key="item.id" :label="item.roleName" :value="item.id"> 
+            <el-option v-for="item in rolesList" :key="item.id" :label="item.roleName" :value="item.id">
               <!-- :value="item.id"选中的其实是id（都是用的id） 这样v-model是当前选中的value值（即id）和selectedRoleId进行绑定（？）当点击确定的时候就将selectedRoleId保存到当前的用户信息中 -->
             </el-option>
           </el-select>
@@ -248,8 +248,11 @@
 </template>
 
 <script>
+import { createAdaptiveTable } from '../../mixins/adaptiveTable.js'
+
 export default {
-  data() {
+  mixins: [createAdaptiveTable(325, 160)],
+  data () {
     // 验证邮箱的自定义规则（查看element）
     var checkEmail = (rule, value, callback) => {
       // 验证邮箱的正则表达式（搜索可得）
@@ -270,7 +273,7 @@ export default {
       callback(new Error('请输入正确的手机号'))
     }
     return {
-      //多选数量
+      // 多选数量
       multipleSelection: [],
       // 获取用户列表的参数对象 原数据是一整条 根据页数和条数返回相应的数据 如每页显示3条 第2页 就会把第4 5 6个数据返回 拿到后就把这3个渲染出来 total控制着页码组件的数据显示
       queryInfo: {
@@ -282,7 +285,7 @@ export default {
         pagesize: 6
       },
       userlist: [] /* 返回的数据存储到这里 */,
-      total: 0 /*总数据条数*/,
+      total: 0 /* 总数据条数 */,
       // 控制添加用户对话框的显示与隐藏
       addDialogVisible: false,
       addForm: {
@@ -308,7 +311,7 @@ export default {
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 15, message: '密码的长度在6~15个字符之间', trigger: 'blur'}
+          { min: 6, max: 15, message: '密码的长度在6~15个字符之间', trigger: 'blur' }
         ],
         email: [
           { required: true, message: '请输入邮箱', trigger: 'blur' },
@@ -343,18 +346,18 @@ export default {
       rolesList: [],
       // 已选中的角色Id值
       selectedRoleId: '',
-      //加载动画
+      // 加载动画
       loading: true
     }
   },
-  created() {
+  created () {
     this.getUserList()
   },
   methods: {
-    async getUserList() {
-      //控制加载动画
+    async getUserList () {
+      // 控制加载动画
       this.loading = true
-      /*await即可获得数据对象，并将其解构赋值出data属性重命名为res*/
+      /* await即可获得数据对象，并将其解构赋值出data属性重命名为res */
       const { data: res } = await this.$http.get('users', {
         params: this
           .queryInfo /* 将参数放到data里面 因为下面还要根据选择的条数等重新请求 参数会变 */
@@ -365,24 +368,21 @@ export default {
       this.userlist = res.data.users
       this.total = res.data.total
       this.$message.success('获取用户数据成功！')
-      console.log(res)
       this.loading = false
     },
     // 监听 下拉页码 改变的事件 newsize为选择的条数 选择了几条就把这个作为参数传给数据请求中重新请求
-    handleSizeChange(newSize) {
+    handleSizeChange (newSize) {
       // console.log(newSize)
       this.queryInfo.pagesize = newSize
       this.getUserList()
     },
     // 监听 页码值 改变的事件 newPage为选择的页码值 选择了第几页就把这个页码作为参数传给数据请求中重新请求
-    handleCurrentChange(newPage) {
-      console.log(newPage)
+    handleCurrentChange (newPage) {
       this.queryInfo.pagenum = newPage
       this.getUserList()
     },
     // 监听 switch 开关状态的改变 调用put请求把原数据更改 这样每次刷新页面时就能保存这个状态 相当于把这个状态存储起来了（原数据存储的方式）
-    async userStateChanged(userinfo) {
-      console.log(userinfo)
+    async userStateChanged (userinfo) {
       const { data: res } = await this.$http.put(
         'users/' + userinfo.id + '/state/' + userinfo.mg_state
       )
@@ -391,14 +391,14 @@ export default {
         userinfo.mg_state = !userinfo.mg_state
         return this.$message.error('修改用户状态失败！')
       }
-      this.$message.success('修改用户状态成功！') //$挂载在原型函数上
+      this.$message.success('修改用户状态成功！') // $挂载在原型函数上
     },
     // 监听添加用户对话框的关闭事件 表单重置 状态保存 这样每次打开都是上次关闭的状态
-    addDialogClosed() {
+    addDialogClosed () {
       this.$refs.addFormRef.resetFields() /* resetFields是element中表单的方法,用此方法需要ref引用表单【常用】 */
     },
     // 点击确定，添加新用户 进行预校验
-    addUser() {
+    addUser () {
       this.$refs.addFormRef.validate(async valid => {
         /* elementui校验通过 valid为true,否则为false */
         if (!valid) return
@@ -417,9 +417,9 @@ export default {
     },
 
     // 展示编辑用户的对话框
-    async showEditDialog(id) {
+    async showEditDialog (id) {
       const { data: res } = await this.$http.get('users/' + id)
-      //解构赋值语法勿忘
+      // 解构赋值语法勿忘
       if (res.meta.status !== 200) {
         return this.$message.error('查询用户信息失败！')
       }
@@ -429,11 +429,11 @@ export default {
       this.editDialogVisible = true
     },
     // 监听修改用户对话框,关闭时重置
-    editDialogClosed() {
+    editDialogClosed () {
       this.$refs.editFormRef.resetFields()
     },
     // 点击确定进行预验证 并提交数据
-    editUserInfo() {
+    editUserInfo () {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return
         // 发起修改用户信息的数据请求
@@ -456,17 +456,17 @@ export default {
       })
     },
     // 根据Id删除对应的用户信息
-    async removeUserById(id) {
+    async removeUserById (id) {
       // 弹框询问用户是否删除数据（参见element）
       const confirmResult = await this.$confirm(
         /* 先给vue挂载了$confirm函数 里面的参数代表弹框显示的内容样式 函数的返回值是promise 所以可以用asyc和await来优化 这样返回的值即confirmResult就是一个字符串了（之前的是一个数据）如果确定就是confirm 取消就是cancle 由catch捕获 */
-        '  此操作将永久删除该用户及其数据，请选择是否确认？','删除用户数据',
+        '  此操作将永久删除该用户及其数据，请选择是否确认？', '删除用户数据',
         {
-          //因为$confirm返回promise所有可以使用await优化
+          // 因为$confirm返回promise所有可以使用await优化
           confirmButtonText: '确 定',
           cancelButtonText: '取 消',
           type: 'warning'
-          //center: true  //文字居中
+          // center: true  //文字居中
         }
       ).catch(
         err => err
@@ -485,21 +485,21 @@ export default {
       this.$message.success('删除用户操作成功！')
       this.getUserList()
     },
-    //操作多选
-    handleSelectionChange(val) {
+    // 操作多选
+    handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    async removeUserAll(id) {
+    async removeUserAll (id) {
       // 弹框询问用户是否删除数据（参见element）
       const confirmResult = await this.$confirm(
         /* 先给vue挂载了$confirm函数 里面的参数代表弹框显示的内容样式 函数的返回值是promise 所以可以用asyc和await来优化 这样返回的值即confirmResult就是一个字符串了（之前的是一个数据）如果确定就是confirm 取消就是cancle 由catch捕获 */
         '  此操作将永久删除所有选中用户数据，请选择是否确认？', '批量删除操作',
         {
-          //因为$confirm返回promise所有可以使用await优化
+          // 因为$confirm返回promise所有可以使用await优化
           confirmButtonText: '确 定',
           cancelButtonText: '取 消',
           type: 'warning'
-          //center: true  //文字居中
+          // center: true  //文字居中
         }
       ).catch(
         err => err
@@ -507,18 +507,18 @@ export default {
       if (confirmResult !== 'confirm') {
         return this.$message.info('已取消批量删除操作')
       }
-     const length = this.multipleSelection.length;
-    for (let i = 0; i < length; i++) {
-     const {data:res} = await this.$http.delete('users/'+this.multipleSelection[i].id)
-     if (res.meta.status !== 200) {
-        return this.$message.error('批量删除用户操作失败！')
+      const length = this.multipleSelection.length
+      for (let i = 0; i < length; i++) {
+        const { data: res } = await this.$http.delete('users/' + this.multipleSelection[i].id)
+        if (res.meta.status !== 200) {
+          return this.$message.error('批量删除用户操作失败！')
+        }
       }
-    }
       this.$message.success('批量删除用户操作成功！')
       this.getUserList()
-      },
+    },
     // 展示分配角色的对话框
-    async setRole(userInfo) {
+    async setRole (userInfo) {
       this.userInfo = userInfo
 
       // 在展示对话框之前，先获取所有的角色列表并存储起来
@@ -530,16 +530,16 @@ export default {
       this.rolesList = res.data
 
       this.setRoleDialogVisible = true
-    },    
-      // 点击确定，分配角色
-    async saveRoleInfo() {
+    },
+    // 点击确定，分配角色
+    async saveRoleInfo () {
       // 如果还没选择新的角色
       if (!this.selectedRoleId) {
         return this.$message.error('请选择要分配的角色！')
       }
       const { data: res } = await this.$http.put(
-        'users/'+this.userInfo.id+'/role',
-        {rid: this.selectedRoleId}
+        'users/' + this.userInfo.id + '/role',
+        { rid: this.selectedRoleId }
       )
       if (res.meta.status !== 200) {
         return this.$message.error('分配用户角色失败！')
@@ -549,12 +549,12 @@ export default {
       this.setRoleDialogVisible = false
     },
     // 监听关闭分配角色的对话框，清空选项
-    setRoleDialogClosed() {
+    setRoleDialogClosed () {
       this.selectedRoleId = ''
       this.userInfo = {}
     }
-    }
   }
+}
 </script>
 
 <style lang="less" scoped>

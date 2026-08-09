@@ -5,8 +5,6 @@ if (process.env.NODE_ENV === 'production') {
   prodPlugins.push('transform-remove-console')
 }
 
-
-
 module.exports = {
   presets: [
     '@vue/cli-plugin-babel/preset'
@@ -19,9 +17,9 @@ module.exports = {
         styleLibraryName: 'theme-chalk'
       }
     ],
-     // 发布产品时候的插件数组 展开数组的每一项放到这个数组里
-     ...prodPlugins,
-     // 路由懒加载插件：
+    // 发布产品时候的插件数组 展开数组的每一项放到这个数组里
+    ...prodPlugins,
+    // 路由懒加载插件：
     '@babel/plugin-syntax-dynamic-import'
   ]
 }

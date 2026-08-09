@@ -18,7 +18,7 @@
         :hide-required-asterisk="true"
       >
         <!--先用：model绑定数据对象到form上-->
-        
+
       <el-form-item prop="username" label="账 号：" label-width="62px">
           <!-- rules在表单中存放规则（直接在data新建一个对象即可），item中用prop调用rules存放的对应规则 -->
           <el-input
@@ -34,9 +34,9 @@
             type="password"
           ></el-input>
         </el-form-item>
-        <el-form-item prop="verifyCode" label="验证码：" 
+        <el-form-item prop="verifyCode" label="验证码："
          class="verifyCodeItemCss">
-          <el-input class="verify_css" placeholder="不必输入验证码" 
+          <el-input class="verify_css" placeholder="不必输入验证码"
           v-model="loginForm.verifyCode" @keyup.enter.native="submitForm('loginForm')"
           label-width="50px"></el-input>
           <!--关键 ↓-->
@@ -54,16 +54,16 @@
 </template>
 
 <script>
-import { GVerify } from './verifyCode';
+import { GVerify } from './verifyCode'
 
 // 行为区
 export default {
-  data() {
+  data () {
     return {
       // 这是登录表单的数据绑定对象 存储着要绑定的数据 用于数据验证 发送请求等
       loginForm: {
-        username: 'admin' ,/* 后面登录就不用再输 */
-        password: '123456',
+        username: 'admin',
+        password: '',
         verifyCode: '浅仓唯'
       },
       // 这是表单的验证规则对象
@@ -76,25 +76,25 @@ export default {
         // 验证密码是否合法
         password: [
           { required: true, message: '请输入登录密码', trigger: 'blur' },
-          { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+          { min: 6, max: 128, message: '长度在 6 到 128 个字符', trigger: 'blur' }
         ],
         verifyCode: [
-          { required: true, message: '随意输入即可', trigger: 'blur' },
+          { required: true, message: '随意输入即可', trigger: 'blur' }
         ]
       },
-       verifyCode: null
+      verifyCode: null
     }
   },
   mounted () {
     this.verifyCode = new GVerify('v_container')
-},
+  },
   methods: {
     // 点击重置按钮，重置登录表单
-    resetLoginForm() {
+    resetLoginForm () {
       // console.log(this); 可以查看本组件实例对象 里面有$refs属性
-      this.$refs.loginFormRef.resetFields() /* 调用element ui中的form methods中的方法*/
+      this.$refs.loginFormRef.resetFields() /* 调用element ui中的form methods中的方法 */
     },
-    login() {
+    login () {
       /* 点击登录进行预验证 即是否符合规则 符合valid为true 否则为false */
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return
@@ -102,13 +102,13 @@ export default {
           'login',
           this.loginForm
         ) /* 加await返回的是数据 不加返回promise 而返回的数据里面只有data才是api返回的数据 其他的都是axios的 解构并重命名即data重命名为res */
-        if (res.meta.status !== 200)
-          return this.$message.error('登录失败！') /* 参见element中消息提示 */
+        if (res.meta.status !== 200) { return this.$message.error('登录失败！') } /* 参见element中消息提示 */
         this.$message.success({
           message: '登录成功！',
           center: true
         })
         window.sessionStorage.setItem('userid', res.data.id)
+        window.sessionStorage.setItem('forcePasswordChange', res.data.force_password_change ? '1' : '0')
         // 登录成功后:
         // 1. 将登录成功之后的 token，保存到客户端的 sessionStorage 中 之后的网络请求中要拿这个token放入请求头中
         //   1.1 项目中除了登录之外的其他API接口，必须在登录之后才能访问 token就是登录令牌
@@ -129,6 +129,29 @@ export default {
   background-size: 100% 100%;
   background-position: center 0;
   text-align: center;
+  min-height: 100dvh;
+}
+
+@media (max-width: 480px), (max-height: 560px) {
+  .login_container {
+    overflow-y: auto;
+    background-size: cover;
+  }
+  .login_box {
+    width: calc(100% - 28px);
+    max-width: 370px;
+    min-height: 405px;
+    height: auto;
+    top: max(84px, 50%);
+  }
+  .login_form {
+    padding-right: 18px;
+    padding-left: 14px;
+  }
+  #v_container {
+    max-width: 150px;
+    overflow: hidden;
+  }
 }
 .login_box {
   width: 370px;
@@ -172,7 +195,7 @@ export default {
   transform: translate(3%);
   padding: 5px 0px 0px 0px;  //上右下左
   font-weight: bold;
-  
+
 }
 .el-form{
    font-weight: bold;

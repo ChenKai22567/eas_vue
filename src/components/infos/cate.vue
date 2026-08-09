@@ -2,8 +2,8 @@
   <div>
     <!-- 面包屑导航区域-->
     <!-- 卡片视图 -->
-    <el-row :gutter="15">
-      <el-col :span="5">
+    <el-row :gutter="15" class="workspace-row">
+      <el-col :span="5" class="action-column">
     <el-card align="middle" class="card_left">
       <el-row>
         <el-col :span="16" class="span">
@@ -12,7 +12,7 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-button type="primary" 
+          <el-button type="primary"
           @click="showAddCateDialog()"
           icon="el-icon-plus"
           plain
@@ -23,7 +23,7 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-button type="danger" 
+          <el-button type="danger"
           @click="removeCateAll()"
           icon="el-icon-close"
           plain>批量删除</el-button>
@@ -44,7 +44,7 @@
       </el-row>
     </el-card>
       </el-col>
-        <el-col :span="19">
+        <el-col :span="19" class="data-column">
     <el-card>
 
 <el-row>
@@ -66,7 +66,7 @@
         stripe
         :row-style="{ height: '20px' }"
         :cell-style="{ padding: '7px' }"
-        height="340px"
+        :height="adaptiveTableHeight"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       >
         <el-table-column
@@ -77,8 +77,8 @@
         ></el-table-column>
         <el-table-column type="index" label="#" width="60"></el-table-column>
         <!-- column索引列 只要加上type="index" -->
-        <el-table-column label="分类名称" prop="cat_name" width="180"></el-table-column>
-        <el-table-column label="是否有效" prop="cat_deleted" width="80">
+        <el-table-column label="分类名称" prop="cat_name" min-width="180"></el-table-column>
+        <el-table-column label="是否有效" prop="cat_deleted" min-width="100">
           <template v-slot="state">
             <i
               class="el-icon-success"
@@ -88,7 +88,7 @@
             <i class="el-icon-error" v-else style="color: red;"></i>
           </template>
         </el-table-column>
-        <el-table-column label="标签等级" prop="cat_level">
+        <el-table-column label="标签等级" prop="cat_level" min-width="120">
           <template v-slot="level">
             <el-tag type="warning" size="mini" v-if="level.row.cat_level === 0"
               >一级分类</el-tag
@@ -102,7 +102,7 @@
             <el-tag type="primary" size="mini" v-else>三级分类</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="250">
+        <el-table-column label="操作" min-width="250">
           <template v-slot="edit">
             <!-- 作用域插槽 -->
             <!-- 修改按钮 -->
@@ -142,7 +142,6 @@
     </el-card>
      </el-col>
     </el-row>
-
 
     <!-- 添加分类对话框 -->
     <el-dialog
@@ -228,10 +227,13 @@
 </template>
 
 <script>
+import { createAdaptiveTable } from '../../mixins/adaptiveTable.js'
+
 export default {
-  data() {
+  mixins: [createAdaptiveTable(325, 160)],
+  data () {
     return {
-       //加载动画
+      // 加载动画
       loading: true,
       // 查询条件
       queryInfo: {
@@ -264,15 +266,15 @@ export default {
       parentCateList: [],
       // 指定级联选择器的配置对象
       cascaderProps: {
-        expandTrigger: 'hover', //新版element要写在这里
-        value: 'cat_id', //选中的属性
-        label: 'cat_name', //显示的属性
-        children: 'children', //嵌套属性的识别
+        expandTrigger: 'hover', // 新版element要写在这里
+        value: 'cat_id', // 选中的属性
+        label: 'cat_name', // 显示的属性
+        children: 'children', // 嵌套属性的识别
         checkStrictly: 'true'
       },
       // 选中的父级分类的Id数组 要选两个 所以是数组
       selectedKeys: [],
-      //多选数量
+      // 多选数量
       multipleSelection: [],
       // 控制修改用户对话框的显示与隐藏
       editDialogVisible: false,
@@ -286,12 +288,12 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.getCateList()
   },
   methods: {
     // 获取救助信息分类数据
-    async getCateList() { 
+    async getCateList () {
       this.loading = true
       const { data: res } = await this.$http.get('categories', {
         params: this.queryInfo
@@ -300,7 +302,6 @@ export default {
         return this.$message.error('获取救助信息分类失败！')
       }
       this.$message.success('获取救助信息分类成功！')
-      console.log(res.data)
       // 存储数据列表
       this.catelist = res.data.result
       // 存储总数据条数
@@ -308,42 +309,41 @@ export default {
       this.loading = false
     },
     // 监听 下拉页码 改变的事件
-    handleSizeChange(newSize) {
+    handleSizeChange (newSize) {
       // console.log(newSize)
       this.queryInfo.pagesize = newSize
       this.getCateList()
     },
     // 监听 页码值 改变的事件
-    handleCurrentChange(newPage) {
-      //console.log(newPage)
+    handleCurrentChange (newPage) {
+      // console.log(newPage)
       this.queryInfo.pagenum = newPage
       this.getCateList()
     },
     // 监听添加用户对话框的关闭事件 表单重置 状态保存 这样每次打开都是上次关闭的状态
-    addCateDialogClosed() {
+    addCateDialogClosed () {
       this.$refs.addCateFormRef.resetFields() /* resetFields是element中表单的方法,用此方法需要ref引用表单【常用】 */
     },
     // 点击按钮，展示添加分类的对话框
-    showAddCateDialog() {
+    showAddCateDialog () {
       // 先获取父级分类的数据列表
       this.getParentCateList()
       // 再展示出对话框
       this.addCateDialogVisible = true
     },
     // 获取父级分类的数据列表
-    async getParentCateList() {
+    async getParentCateList () {
       const { data: res } = await this.$http.get('categories', {
         params: { type: 2 }
       })
       if (res.meta.status !== 200) {
         return this.$message.error('获取所属父级分类数据失败！')
       }
-      //console.log(res.data)
+      // console.log(res.data)
       this.parentCateList = res.data
     },
     // 父级分类选中项发生改变
-    parentCateChanged() {
-      console.log(this.selectedKeys)
+    parentCateChanged () {
       // 判断是否选中父级分类，length>0即选中
       if (this.selectedKeys.length > 0) {
         // 取用数组最后一项
@@ -359,7 +359,7 @@ export default {
       }
     },
     // 点击确定，添加新用户 进行预校验
-    addCate() {
+    addCate () {
       this.$refs.addCateFormRef.validate(async valid => {
         /* elementui校验通过 valid为true,否则为false */
         if (!valid) return
@@ -380,7 +380,7 @@ export default {
       })
     },
     // 根据Id删除对应的分类信息
-    async removeCateById(id) {
+    async removeCateById (id) {
       const confirmResult = await this.$confirm(
         '  此操作将永久删除该分类，请选择是否确认？',
         '删除用户数据',
@@ -388,7 +388,7 @@ export default {
           confirmButtonText: '确 定',
           cancelButtonText: '取 消',
           type: 'warning'
-          //center: true  //文字居中
+          // center: true  //文字居中
         }
       ).catch(err => err)
       // console.log(confirmResult)
@@ -403,12 +403,11 @@ export default {
       this.$message.success('删除分类操作成功！')
       this.getCateList()
     },
-    //操作多选
-    handleSelectionChange(val) {
+    // 操作多选
+    handleSelectionChange (val) {
       this.multipleSelection = val
-      console.log(this.multipleSelection)
     },
-    async removeCateAll(id) {
+    async removeCateAll (id) {
       // 弹框询问用户是否删除数据（参见element）
       const confirmResult = await this.$confirm(
         '  此操作将永久删除所有选中分类数据，请选择是否确认？',
@@ -417,7 +416,7 @@ export default {
           confirmButtonText: '确 定',
           cancelButtonText: '取 消',
           type: 'warning'
-          //center: true  //文字居中
+          // center: true  //文字居中
         }
       ).catch(err => err)
       if (confirmResult !== 'confirm') {
@@ -436,9 +435,9 @@ export default {
       this.getCateList()
     },
     // 展示编辑用户的对话框
-    async showEditDialog(id) {
+    async showEditDialog (id) {
       const { data: res } = await this.$http.get('categories/' + id)
-      //解构赋值语法勿忘
+      // 解构赋值语法勿忘
       if (res.meta.status !== 200) {
         return this.$message.error('查询原有分类信息失败！')
       }
@@ -448,7 +447,7 @@ export default {
       this.editDialogVisible = true
     },
     // 监听修改用户对话框,关闭时重置【注意勿忘引用】
-    editDialogClosed() {
+    editDialogClosed () {
       this.$refs.editFormRef.resetFields()
       // 清空级联选择器存储的数据
       this.selectedKeys = []
@@ -456,7 +455,7 @@ export default {
       this.addCateForm.cat_pid = 0
     },
     // 点击确定进行预验证 并提交数据
-    editCateInfo() {
+    editCateInfo () {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return
         // 发起修改用户信息的数据请求
@@ -476,7 +475,7 @@ export default {
         // 提示修改成功
         this.$message.success('修改分类信息成功！')
       })
-    },
+    }
   }
 }
 </script>

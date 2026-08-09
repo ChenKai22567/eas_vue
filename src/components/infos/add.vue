@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-card>
-      <el-row :gutter="40">
-        <el-col :span="19">
+      <el-row :gutter="24" class="add-overview">
+        <el-col :span="19" class="overview-main">
           <el-alert
             title="您正在添加救助信息"
             type="warning"
@@ -26,7 +26,7 @@
             <el-step title="发布完成"></el-step>
           </el-steps>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="5" class="overview-progress">
           <el-progress
             type="circle"
             :percentage="(activeIndex - 0) * 20"
@@ -58,8 +58,8 @@
               <el-input v-model="addForm.goods_price" type="number"></el-input>
             </el-form-item>
             <el-form-item label="救助重要程度：" prop="goods_number" class="narrow">
-              <el-rate v-model="addForm.goods_number" 
-          class="level" :texts="texts" show-text> 
+              <el-rate v-model="addForm.goods_number"
+          class="level" :texts="texts" show-text>
                 </el-rate>
             </el-form-item>
             <el-form-item label="救助完成情况:" prop="goods_state" class="narrow">
@@ -71,7 +71,7 @@
             </el-form-item>
             <el-form-item label="救助信息分类：" prop="goods_cat">
               <el-cascader
-               
+
                 :options="catelist"
                 :props="cateProps"
                 v-model="addForm.goods_cat"
@@ -161,14 +161,13 @@
 </template>
 
 <script>
- /*推荐用_接收 类似jquery用$接收 */
-import _ from 'lodash' /* 导入lodash再调用cloneDeep方法*/
-
+/* 推荐用_接收 类似jquery用$接收 */
+import _ from 'lodash' /* 导入lodash再调用cloneDeep方法 */
 
 export default {
-  data() {
+  data () {
     return {
-      texts:['完全不紧急','一般紧急','较为紧急','非常紧急','极度紧急'],
+      texts: ['完全不紧急', '一般紧急', '较为紧急', '非常紧急', '极度紧急'],
       colors: [
         { color: '#f56c6c', percentage: 20 },
         { color: '#e6a23c', percentage: 40 },
@@ -179,7 +178,7 @@ export default {
       activeIndex: '0',
       // 添加救助信息表单数据对象
       addForm: {
-        goods_name: '调试默认1',
+        goods_name: '',
         goods_price: 1,
         goods_weight: 0,
         goods_state: 2,
@@ -212,7 +211,7 @@ export default {
       // 救助信息分类列表
       catelist: [],
       cateProps: {
-        //element ui 新用法记住
+        // element ui 新用法记住
         expandTrigger: 'hover',
         /* 级联选择器的配置项 */
         label: 'cat_name',
@@ -224,39 +223,38 @@ export default {
       // 静态参数列表数据
       onlyTableData: [],
       // 上传图片的URL地址
-      uploadURL: 'http://101.43.37.78:8888/api/private/v1/upload',
+      uploadURL: '/api/private/v1/upload',
       // 图片上传组件的headers请求头对象
       headerObj: {
-        Authorization: window.sessionStorage.getItem('token')
+        Authorization: `Bearer ${window.sessionStorage.getItem('token')}`
       },
       previewPath: '',
       previewVisible: false
     }
   },
-  created() {
+  created () {
     this.getCateList()
   },
   methods: {
     // 获取所有救助信息分类数据
-    async getCateList() {
+    async getCateList () {
       const { data: res } = await this.$http.get('categories')
       if (res.meta.status !== 200) {
         return this.$message.error('获取救助信息分类数据失败！')
       }
       this.catelist = res.data
-      console.log(this.catelist)
     },
     // 级联选择器选中项变化
-    //因为通过v-model将选中项以数组的形式和goods_cat绑定了 但是最后上传给服务器的时候要字符串形式 但是又不能将其直接改为字符串（正向渲染不出来）所以先深拷贝一份总参数对象 装lodash包 里面有cloneDeep方法（参考对应官网）装好依赖后先在本组件里导入（推荐用_接收 类似jquery用$接收）然后调用cloneDeep方法拷贝一份
-    handleChange() {
-      //console.log(this.addForm.goods_cat)
+    // 因为通过v-model将选中项以数组的形式和goods_cat绑定了 但是最后上传给服务器的时候要字符串形式 但是又不能将其直接改为字符串（正向渲染不出来）所以先深拷贝一份总参数对象 装lodash包 里面有cloneDeep方法（参考对应官网）装好依赖后先在本组件里导入（推荐用_接收 类似jquery用$接收）然后调用cloneDeep方法拷贝一份
+    handleChange () {
+      // console.log(this.addForm.goods_cat)
       if (this.addForm.goods_cat.length !== 3) {
         /* 没有选中三级项 清空 */
         this.addForm.goods_cat = []
       }
     },
     // before-leave是标签页切换时会触发函数 函数会自动传入两个参数
-    beforeTabLeave(activeName, oldActiveName) {
+    beforeTabLeave (activeName, oldActiveName) {
       // console.log('即将离开的标签页名字是：' + oldActiveName)
       // console.log('即将进入的标签页名字是：' + activeName)
       // return false 则不能切换 接下来要根据条件进行阻止
@@ -266,19 +264,19 @@ export default {
       }
     },
     // 切换标签时执行
-    async tabClicked() {
+    async tabClicked () {
       // console.log(this.activeIndex)
       if (this.activeIndex === '1') {
         /* 证明访问的是可选参数面板 获取数据存储到manyTableData */
         const { data: res } = await this.$http.get(
-          'categories/'+this.cateId+'/attributes',
+          'categories/' + this.cateId + '/attributes',
           {
             params: { sel: 'many' }
           })
         if (res.meta.status !== 200) {
           return this.$message.error('获取动态参数列表失败！')
         }
-        //console.log(res.data)
+        // console.log(res.data)
         // 存储前先将attr_vals变为数组 供复选框组check-box-group渲染使用（这个是存储在了数据里面 而不是参数对象里面 参数对象里面还要另外加一个attrs存放这个 把数组转为字符串存到里面再发送出去）最后传给服务器时还要改回字符串
         res.data.forEach(item => {
           item.attr_vals = item.attr_vals.length === 0 ? [] : item.attr_vals.split(' ')
@@ -286,27 +284,24 @@ export default {
         this.manyTableData = res.data
       } else if (this.activeIndex === '2') {
         const { data: res } = await this.$http.get(
-          'categories/'+this.cateId+'/attributes',
+          'categories/' + this.cateId + '/attributes',
           {
             params: { sel: 'only' }
           })
         if (res.meta.status !== 200) {
           return this.$message.error('获取静态参数失败！')
         }
-        //console.log(res.data)
+        // console.log(res.data)
         this.onlyTableData = res.data
       }
     },
     // 处理图片预览效果 on-preview是点击图片的名称触发这个事件
-    handlePreview(file) {
-      console.log(
-        file
-      ) /* 当前图片的信息 有response-> data-> temp_path url url是图片路径可在网站上查看 所以可以在展示的对话框里将url与图片的src绑定 展示出来 */
+    handlePreview (file) {
       this.previewPath = file.response.data.url
       this.previewVisible = true
     },
     // 处理移除图片的操作，on-remove点击叉号触发
-    handleRemove(file) {
+    handleRemove (file) {
       // console.log(file) 移除的图片的信息 依然有response-> data-> temp_path
       // 1. 获取将要删除的图片的临时路径
       const filePath = file.response.data.tmp_path
@@ -314,19 +309,16 @@ export default {
       const i = this.addForm.pics.findIndex(x => x.pic === filePath)
       // 3. 调用数组的 splice 方法，把图片信息对象，从 pics 数组中移除
       this.addForm.pics.splice(i, 1)
-      console.log(this.addForm) /* addForm即要发送请求的参数列表 */
     },
     // 监听图片上传成功，保存文件路径
-    handleSuccess(response) {
-      console.log(response) /* 就是network里显示的信息 */
+    handleSuccess (response) {
       // 1. 拼接得到一个图片信息对象
-      const picInfo = { pic: response.data.tmp_path }
+      const picInfo = { pic: response.data.tmp_path, url: response.data.url }
       // 2. 将图片信息对象存储到pics数组中
       this.addForm.pics.push(picInfo)
-      console.log(this.addForm) /* addForm即要发送请求的参数列表 */
     },
     // 添加救助信息，发送请求
-    add() {
+    add () {
       // 先进行预验证
       this.$refs.addFormRef.validate(async valid => {
         if (!valid) {
@@ -339,6 +331,7 @@ export default {
         const form = _.cloneDeep(this.addForm)
         form.goods_cat = form.goods_cat.join(',')
         // 2.处理动态参数 即先把存放在数据里的相应数据（attr_vals）改为数组再存放到参数对象里
+        this.addForm.attrs = []
         this.manyTableData.forEach(item => {
           const newInfo = {
             attr_id: item.attr_id,
@@ -353,7 +346,6 @@ export default {
         })
         // 把addForm里推进去的attrs复制给新拷贝出来的form 再发送请求
         form.attrs = this.addForm.attrs
-        console.log(form)
         // 发起请求添加救助信息
         // 信息的名称，必须是唯一的
         const { data: res } = await this.$http.post('goods', form)
@@ -367,7 +359,7 @@ export default {
   },
   computed: {
     // 计算属性选中的三级商品分类的id
-    cateId() {
+    cateId () {
       if (this.addForm.goods_cat.length === 3) {
         return this.addForm.goods_cat[2]
       }
@@ -379,7 +371,7 @@ export default {
 
 <style lang="less" scoped>
 .el-checkbox {
-  margin: 0 15px 0 0 !important; //上右下左 
+  margin: 0 15px 0 0 !important; //上右下左
 }
 
 .previewImg {
@@ -390,8 +382,8 @@ export default {
   margin-top: 80px;
 }
 .el-alert {
-  width: 70%;
-  margin-left: 100px;
+  width: min(70%, 680px);
+  margin: 0 auto;
 }
 .el-steps {
   width: 100%;
@@ -399,14 +391,15 @@ export default {
   margin-bottom: 30px;
 }
 .el-form {
-  margin-left: 25px;
+  margin-left: clamp(0px, 2vw, 25px);
   margin-bottom: -20px;
 }
 .el-form-item {
-  margin-right: 30px;
+  margin-right: clamp(10px, 2vw, 30px);
 }
 .el-card {
-  min-height: 470px;
+  height: max(300px, calc(100dvh - 184px));
+  min-height: 0;
 }
 .el-cascader {
   width: 60%;
@@ -420,6 +413,68 @@ export default {
 }
 .manyPage{
     margin-top: 30px;
+}
+.overview-progress {
+  display: flex;
+  justify-content: center;
+  min-width: 126px;
+}
+@media (max-width: 1050px) {
+  .add-overview {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 126px;
+  }
+
+  .add-overview::before,
+  .add-overview::after {
+    display: none;
+    content: none;
+  }
+
+  .add-overview > .overview-main,
+  .add-overview > .overview-progress {
+    width: 100%;
+  }
+
+  .el-alert {
+    width: 88%;
+  }
+
+  .el-cascader {
+    width: min(100%, 460px);
+  }
+}
+
+@media (max-height: 700px) {
+  .el-steps {
+    margin-top: 14px;
+    margin-bottom: 16px;
+  }
+
+  .el-form-item {
+    margin-bottom: 14px;
+  }
+
+  .el-card /deep/ .el-card__body {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+}
+
+@media (max-width: 760px) {
+  .add-overview {
+    grid-template-columns: minmax(0, 1fr) 92px;
+  }
+
+  .overview-progress {
+    min-width: 92px;
+    transform: scale(0.75);
+    transform-origin: top center;
+  }
+
+  .el-form {
+    margin-left: 0;
+  }
 }
 
 </style>

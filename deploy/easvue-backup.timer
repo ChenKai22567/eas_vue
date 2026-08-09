@@ -1,0 +1,11 @@
+[Unit]
+Description=Run EasVue backup every day
+
+[Timer]
+OnCalendar=*-*-* 03:17:00
+Persistent=true
+RandomizedDelaySec=10m
+Unit=easvue-backup.service
+
+[Install]
+WantedBy=timers.target

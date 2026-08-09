@@ -1,0 +1,20 @@
+[Unit]
+Description=EasVue SQLite consistent backup and restore verification
+After=easvue-api.service
+
+[Service]
+Type=oneshot
+User=easvue
+Group=easvue
+EnvironmentFile=/www/wwwroot/easvue.624work.club/shared/easvue.env
+Environment=BACKUP_DIR=/www/backup/easvue
+Environment=BACKUP_RETENTION_DAYS=14
+WorkingDirectory=/www/wwwroot/easvue.624work.club/current
+ExecStart=/opt/easvue/node-v24.18.1/bin/node deploy/sqlite-backup.mjs
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadOnlyPaths=/www/wwwroot/easvue.624work.club/current
+ReadWritePaths=/www/wwwroot/easvue.624work.club/shared /www/backup/easvue
+UMask=0077
